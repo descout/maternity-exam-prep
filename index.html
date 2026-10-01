@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maternity Exam 2: High-Yield NCLEX Practice Test</title>
+    <style>
+        :root {
+            --primary: #2b6cb0;
+            --primary-dark: #1a365d;
+            --secondary: #d69e2e;
+            --success: #38a169;
+            --error: #e53e3e;
+            --bg-dark: #0f172a;
+            --card-dark: #1e293b;
+            --text-dark: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-dark: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 950px;
+        }
+
+        header {
+            background: var(--card-dark);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-dark);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: #60a5fa;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--border-dark);
+            color: var(--text-dark);
+        }
+
+        .quiz-card {
+            background: var(--card-dark);
+            border: 1px solid var(--border-dark);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .quiz-card.active {
+            display: block;
+        }
+
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .q-text {
+            font-size: 1.15rem;
+            font-weight: 600;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background: #0f172a;
+            border: 1px solid var(--border-dark);
+            color: var(--text-dark);
+            padding: 14px 18px;
+            border-radius: 8px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary);
+            background: #1e293b;
+        }
+
+        .option-btn.selected {
+            border-color: var(--primary);
+            background: #1e3a8a;
+        }
+
+        .option-btn.correct {
+            border-color: var(--success);
+            background: #064e3b;
+        }
+
+        .option-btn.incorrect {
+            border-color: var(--error);
+            background: #7f1d1d;
+        }
+
+        .rationale {
+            margin-top: 20px;
+            padding: 15px;
+            background: #0f172a;
+            border-left: 4px solid var(--secondary);
+            border-radius: 4px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            display: none;
+        }
+
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-dark);
+        }
+
+        .grid-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 20px;
+            background: var(--card-dark);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid var(--border-dark);
+        }
+
+        .grid-item {
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            border: 1px solid var(--border-dark);
+            background: #0f172a;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .grid-item.answered {
+            background: var(--primary-dark);
+            border-color: var(--primary);
+        }
+
+        .grid-item.active {
+            border: 2px solid #60a5fa;
+        }
+
+        .results-panel {
+            background: var(--card-dark);
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid var(--border-dark);
+            text-align: center;
+            display: none;
+        }
+
+        .score-display {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #60a5fa;
+            margin: 15px 0;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .badge-hard { background: #7f1d1d; color: #fca5a5; }
+        .badge-med { background: #78350f; color: #fde047; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div>
+            <h1>Maternity & Intrapartum Nursing Exam</h1>
+            <p style="color: var(--text-muted); font-size: 0.85rem;">50 NCLEX-Style Hard Questions • Practice Mode</p>
+        </div>
+        <div class="controls">
+            <button class="btn btn-secondary" onclick="toggleMode()" id="mode-btn">Switch to Test Mode</button>
+            <button class="btn" onclick="resetQuiz()">Restart</button>
+        </div>
+    </header>
+
+    <div id="quiz-container"></div>
+
+    <div class="quiz-card" id="results-card">
+        <div class="results-panel" id="results-panel" style="display: block;">
+            <h2>Exam Completed!</h2>
+            <div class="score-display" id="score-text">0 / 50</div>
+            <p id="feedback-text" style="color: var(--text-muted); margin-bottom: 20px;"></p>
+            <button class="btn" onclick="resetQuiz()">Retake Exam</button>
+        </div>
+    </div>
+
+    <div class="nav-footer">
+        <button class="btn btn-secondary" id="prev-btn" onclick="changeQuestion(-1)">Previous</button>
+        <span id="progress-text" style="color: var(--text-muted); font-size: 0.9rem;">Question 1 of 50</span>
+        <button class="btn" id="next-btn" onclick="changeQuestion(1)">Next</button>
+    </div>
+
+    <div class="grid-nav" id="grid-nav"></div>
+</div>
+
+<script>
+const questions = [
+    {
+        q: "A nurse is caring for a client with severe preeclampsia receiving a continuous Magnesium Sulfate infusion. During the 1-hour assessment, the nurse notes: RR = 10 breaths/min, deep tendon reflexes = 0 (absent), urine output = 20 mL/hr, and BP = 110/65 mmHg. Which action should the nurse take FIRST?",
+        options: [
+            "Obtain a stat serum magnesium level",
+            "Stop the Magnesium Sulfate infusion immediately",
+            "Administer Calcium Gluconate 1 g IV over 3 minutes",
+            "Notify the primary healthcare provider"
+        ],
+        answer: 1,
+        rationale: "Stopping the infusion is ALWAYS the immediate priority when key clinical signs of severe toxicity (RR <12, absent reflexes, UO <30 mL/hr) are identified to prevent respiratory failure and cardiac arrest. Antidote administration follows immediately after.",
+        level: "hard"
+    },
+    {
+        q: "A multiparous client at 34 weeks gestation presents to the triage unit with sudden, painless, bright red vaginal bleeding. She denies abdominal pain or contractions. Which interprofessional order must the nurse QUESTION?",
+        options: [
+            "Perform a digital vaginal examination to assess cervical dilation",
+            "Obtain a type and crossmatch for 2 units of packed red blood cells",
+            "Administer IV Lactated Ringer's solution",
+            "Perform an abdominal ultrasound examination"
+        ],
+        answer: 0,
+        rationale: "Digital vaginal exams are STRICTLY CONTRAINDICATED in clients with suspected Placenta Previa because touching the placenta over the cervical os can precipitate catastrophic, fatal hemorrhage.",
+        level: "hard"
+    },
+    {
+        q: "A nurse is evaluating laboratory results for a pregnant client with severe preeclampsia. Which set of lab values confirms the development of HELLP Syndrome?",
+        options: [
+            "Hemoglobin 11.5 g/dL, AST 30 U/L, Platelets 180,000/mm³",
+            "Hematocrit 38%, ALT 40 U/L, Platelets 120,000/mm³",
+            "Hemoglobin 8.8 g/dL, AST 110 U/L, Platelets 72,000/mm³",
+            "Hemoglobin 13.0 g/dL, ALT 25 U/L, Platelets 250,000/mm³"
+        ],
+        answer: 2,
+        rationale: "HELLP syndrome consists of Hemolysis (low H&H), Elevated Liver Enzymes (AST >75 U/L, ALT >50 U/L, LDH >600 U/L), and Low Platelets (<100,000/mm³).",
+        level: "hard"
+    },
+    {
+        q: "A client in labor receives an epidural block. Ten minutes post-injection, her blood pressure drops from 124/78 mmHg to 88/50 mmHg, and the fetal heart rate shows late decelerations. Which sequence of actions should the nurse execute FIRST?",
+        options: [
+            "Turn client to left lateral position, open IV fluid bolus, administer O2 at 10 L/min via non-rebreather",
+            "Administer IV Ephedrine 5 mg immediately, then notify provider",
+            "Increase Pitocin infusion rate to accelerate delivery",
+            "Perform a sterile vaginal exam to assess for cord prolapse"
+        ],
+        answer: 0,
+        rationale: "Maternal hypotension causes uteroplacental insufficiency (late decelerations). Immediate corrective protocol: Position client laterally (relieves vena cava compression), rapid IV fluid bolus (increases preload), and 10 L O2 via non-rebreather.",
+        level: "hard"
+    },
+    {
+        q: "A primigravida at 39 weeks laboring at 6 cm dilation experiences sudden rupture of membranes. The nurse observes a thick, dark green amniotic fluid. Electronic fetal monitoring shows recurrent late decelerations. What is the priority underlying concern?",
+        options: [
+            "Active maternal Chorioamnionitis",
+            "Normal fetal physiological response to term labor",
+            "Fetal distress and intrauterine hypoxia causing sphincter relaxation",
+            "Imminent precipitous labor within 30 minutes"
+        ],
+        answer: 2,
+        rationale: "In utero passage of meconium (green-stained fluid) is caused by fetal hypoxia/stress relaxing the anal sphincter. Paired with late decelerations, this indicates significant fetal distress and risk for Meconium Aspiration Syndrome.",
+        level: "hard"
+    },
+    {
+        q: "A laboring client's fetal monitor tracing shows a baseline FHR of 145 bpm, moderate variability, with abrupt dips in FHR reaching 90 bpm that occur unpredictably during and between contractions, returning rapidly to baseline. What is the nurse's priority intervention?",
+        options: [
+            "Prepare for emergency Cesarean section",
+            "Change maternal position to lateral or knee-chest",
+            "Administer Terbutaline 0.25 mg SQ",
+            "Document as a normal reassuring pattern (Early Decelerations)"
+        ],
+        answer: 1,
+        rationale: "Abrupt dips without consistent relation to contractions represent Variable Decelerations, caused by umbilical cord compression (VEAL CHOP: Variable = Cord Compression). Primary response: Reposition client to relieve cord pressure.",
+        level: "hard"
+    },
+    {
+        q: "A client at 30 weeks gestation is admitted with preterm labor. The provider orders Terbutaline (Brethine) SQ. Which clinical assessment finding requires the nurse to HOLD the dose and immediately notify the provider?",
+        options: [
+            "Maternal heart rate of 128 beats/min",
+            "Maternal blood pressure of 118/74 mmHg",
+            "Fetal heart rate of 150 beats/min",
+            "Report of mild nervous jitteriness"
+        ],
+        answer: 0,
+        rationale: "Terbutaline is a beta-adrenergic agonist. It causes significant maternal tachycardia. The drug MUST be withheld if the maternal pulse exceeds 120 bpm due to risk of cardiac arrhythmias and pulmonary edema.",
+        level: "hard"
+    },
+    {
+        q: "A nurse performs Leopold's maneuvers on a client in labor. The nurse palpates a smooth, hard, round structure at the pelvic inlet, a broad smooth contour along the right side of the abdomen, and irregular small parts on the left side. Fetal heart tones are heard loudest in the right lower quadrant. How should the nurse document fetal position?",
+        options: [
+            "Left Occiput Anterior (LOA)",
+            "Right Occiput Anterior (ROA)",
+            "Right Occiput Posterior (ROP)",
+            "Left Sacrum Anterior (LSA)"
+        ],
+        answer: 1,
+        rationale: "Head down at inlet (vertex), solid back on mother's right side, small parts on left, FHR loudest in RLQ = Right Occiput Anterior (ROA).",
+        level: "hard"
+    },
+    {
+        q: "During the second stage of labor, a fetus delivers the head, but it retracts tightly against the maternal perineum ('turtle sign'). The shoulders fail to deliver. Which initial nursing action is CORRECT?",
+        options: [
+            "Apply strong fundal pressure to push the shoulders through",
+            "Hyperflex the mother's legs back against her abdomen (McRoberts Maneuver)",
+            "Perform immediate high vacuum extraction",
+            "Instruct the client to stop breathing and push as hard as possible"
+        ],
+        answer: 1,
+        rationale: "The 'turtle sign' indicates Shoulder Dystocia. The first maneuver is McRoberts Maneuver (sharp thigh hyperflexion against abdomen) combined with suprapubic pressure. Fundal pressure is strictly prohibited as it worsens shoulder impaction.",
+        level: "hard"
+    },
+    {
+        q: "A pregnant client at 28 weeks with a history of Type 1 Diabetes undergoes antenatal testing. The nurse understands that insulin requirements during the second half of pregnancy (>20 weeks) generally:",
+        options: [
+            "Decrease significantly due to fetal glucose consumption",
+            "Remain identical to pre-pregnancy baseline needs",
+            "Increase substantially due to placental hormones (HPL, Cortisol, Progesterone)",
+            "Fluctuate wildly requiring complete discontinuation of NPH insulin"
+        ],
+        answer: 2,
+        rationale: "After 20 weeks, human placental lactogen (HPL), cortisol, and progesterone induce significant insulin resistance to ensure adequate glucose supply for the fetus, increasing maternal insulin needs by 50–60%.",
+        level: "hard"
+    },
+    {
+        q: "A nurse is reviewing a laboring client's internal intrauterine pressure catheter (IUPC) tracing. Contractions are occurring every 1.5 minutes, lasting 100 seconds, with resting tone measured at 30 mmHg. FHR shows late decelerations. What condition is present?",
+        options: [
+            "Hypotonic labor dysfunction",
+            "Hypertonic uterine tachysystole",
+            "Normal labor progression",
+            "Stage 2 active expulsive stage"
+        ],
+        answer: 1,
+        rationale: "Contractions >5 in 10 mins, lasting >90 seconds, or elevated resting tone (>20 mmHg) define hypertonic tachysystole. This prevents placental perfusion during rest phases, leading to fetal hypoxia.",
+        level: "hard"
+    },
+    {
+        q: "A client at 35 weeks gestation presents with severe abdominal pain, a hard board-like abdomen, and dark red vaginal bleeding. Fetal heart rate shows severe baseline bradycardia (85 bpm). What is the nurse's priority action?",
+        options: [
+            "Administer Cervidil gel to induce labor",
+            "Prepare the client for an immediate Emergency Cesarean delivery",
+            "Perform a 24-hour urine collection for protein",
+            "Place the client in high Fowler's position"
+        ],
+        answer: 1,
+        rationale: "Severe constant pain, board-like abdomen, dark blood, and fetal bradycardia indicate Grade 3 Placental Abruption. Complete placental detachment is a life-threatening crisis requiring emergent delivery.",
+        level: "hard"
+    },
+    {
+        q: "A laboring client at 39 weeks experiences Spontaneous Rupture of Membranes (SROM). On vaginal examination, the nurse feels a soft, pulsating structure protruding through the cervix alongside the fetal head. What is the immediate priority nursing intervention?",
+        options: [
+            "Push the pulsating cord back into the uterus using sterile gloved fingers",
+            "Insert a sterile gloved hand and exert upward pressure on the fetal presenting part",
+            "Place the client in a high Fowler's upright position",
+            "Cover the external vulva with dry sterile gauze pads"
+        ],
+        answer: 1,
+        rationale: "In umbilical cord prolapse, the nurse MUST keep a sterile gloved hand in the vagina pushing the presenting part UP off the cord to maintain blood flow until an emergency C-section is completed. Never attempt to reinsert the cord.",
+        level: "hard"
+    },
+    {
+        q: "A client with severe preeclampsia is receiving Magnesium Sulfate IV. Which assessment finding assessed every 4 hours confirms a therapeutic outcome rather than toxicity?",
+        options: [
+            "Serum Magnesium level of 5.2 mEq/L",
+            "Patellar reflexes rated as 0",
+            "Respiratory rate of 9 breaths/min",
+            "Urine output of 15 mL/hr"
+        ],
+        answer: 0,
+        rationale: "Therapeutic serum magnesium level for preventing preeclamptic seizures is 4 to 6 mEq/L. Levels above 6 mEq/L risk CNS depression and toxicity.",
+        level: "hard"
+    },
+    {
+        q: "A client at 26 weeks gestation undergoes a 1-hour Oral Glucose Challenge Test (GCT) with a 50g glucose load. Her blood glucose result is 158 mg/dL. How should the nurse interpret and act upon this result?",
+        options: [
+            "The test is normal; re-screen at 36 weeks",
+            "The client has confirmed Gestational Diabetes; start insulin immediately",
+            "The test is abnormal; schedule a 3-hour Oral Glucose Tolerance Test (GTT)",
+            "The test is invalid; repeat the 1-hour GCT after an 8-hour fast"
+        ],
+        answer: 2,
+        rationale: "A 1-hour GCT >140 mg/dL is a positive screening result (not diagnostic). The diagnostic follow-up requires a formal 3-hour GTT after an overnight fast.",
+        level: "hard"
+    },
+    {
+        q: "To diagnose Gestational Diabetes Mellitus (GDM) using the 3-hour 100g Glucose Tolerance Test (GTT), how many blood glucose thresholds must be exceeded?",
+        options: [
+            "At least 1 threshold value",
+            "At least 2 or more threshold values",
+            "All 4 threshold values",
+            "Fasting value only"
+        ],
+        answer: 1,
+        rationale: "Diagnosis of GDM requires 2 or more values meeting/exceeding standard thresholds (Fasting ≥95, 1-hr ≥180, 2-hr ≥155, 3-hr ≥140 mg/dL).",
+        level: "hard"
+    },
+    {
+        q: "A client presents in labor at 38 weeks. Her prenatal chart notes she tested positive for Group B Streptococcus (GBS) at 36 weeks. Which intrapartum intervention is indicated?",
+        options: [
+            "Schedule an immediate Cesarean section before ROM occurs",
+            "Administer IV Ampicillin or Penicillin G during labor",
+            "Administer oral erythromycin after delivery to the newborn",
+            "No treatment is needed if membranes are intact"
+        ],
+        answer: 1,
+        rationale: "GBS-positive clients require prophylactic intrapartum IV antibiotics (Penicillin G or Ampicillin) every 4 hours during labor to prevent vertical transmission and severe neonatal sepsis.",
+        level: "hard"
+    },
+    {
+        q: "A nurse is caring for a client in the active stage of labor (6 cm dilation). The client complains of severe, excruciating lower back pain with every contraction. The nurse suspects the fetus is in an Occiput Posterior (OP) position. Which non-pharmacological action is most effective?",
+        options: [
+            "Instruct the client to remain flat on her back (supine)",
+            "Apply firm continuous counter-pressure over the client's sacral area",
+            "Apply cold ice packs to the client's lower abdomen",
+            "Place the client in high Trendelenburg position"
+        ],
+        answer: 1,
+        rationale: "In OP position ('back labor'), the hard fetal occiput presses directly against the maternal sacrum. Continuous counter-pressure over the sacrum or changing position to all-fours lifts the fetal head off the sacral nerves.",
+        level: "hard"
+    },
+    {
+        q: "A pregnant client at 32 weeks is evaluated for Preterm Labor. The nurse performs a Fetal Fibronectin (fFN) swab test. The test result returns NEGATIVE. How should the nurse explain this finding?",
+        options: [
+            "The client will definitely deliver within the next 48 hours",
+            "There is a very high probability (>95%) that the client will NOT deliver within the next 14 days",
+            "The client has active chorioamnionitis and requires antibiotics",
+            "The test indicates fetal lung maturity"
+        ],
+        answer: 1,
+        rationale: "Negative fFN between 22 and 34 weeks has an excellent negative predictive value, indicating that preterm delivery is extremely unlikely within the next 1–2 weeks.",
+        level: "hard"
+    },
+    {
+        q: "A client receiving Pitocin for labor augmentation experiences 6 contractions in 10 minutes, lasting 95 seconds each. Fetal heart rate shows recurrent late decelerations. Which sequence of nursing interventions MUST be followed?",
+        options: [
+            "Turn off Pitocin $\rightarrow$ Reposition to left lateral $\rightarrow$ Increase primary IV fluids $\rightarrow$ Administer O2 at 10 L/min via non-rebreather",
+            "Increase Pitocin rate $\rightarrow$ Administer O2 $\rightarrow$ Reposition client",
+            "Administer IV Ephedrine $\rightarrow$ Turn off Pitocin $\rightarrow$ Perform vaginal exam",
+            "Apply fundal pressure $\rightarrow$ Turn off Pitocin $\rightarrow$ Call provider"
+        ],
+        answer: 0,
+        rationale: "When tachysystole with non-reassuring FHR occurs, STOP the oxytocic agent first, reposition to left lateral, flush with fluids, and administer high-flow oxygen.",
+        level: "hard"
+    },
+    {
+        q: "Which systemic pain medication given during labor carries a maternal half-life of 2.5 hours but a prolonged fetal/newborn half-life of 13 hours, increasing the risk for neonatal respiratory depression if administered within 2 hours of birth?",
+        options: [
+            "Fentanyl (Sublimaze)",
+            "Meperidine (Demerol)",
+            "Butorphanol (Stadol)",
+            "Nalbuphine (Nubain)"
+        ],
+        answer: 1,
+        rationale: "Meperidine (Demerol) has active metabolites with a newborn half-life up to 13–24 hours, making it prone to causing prolonged neonatal sedation and respiratory depression.",
+        level: "hard"
+    },
+    {
+        q: "A nurse is monitoring a client in the Transition Phase of the First Stage of Labor. Which set of clinical findings aligns with this stage?",
+        options: [
+            "Cervix 1-3 cm dilated, contractions every 10 mins, mild intensity",
+            "Cervix 4-7 cm dilated, contractions every 3-5 mins, moderate intensity",
+            "Cervix 8-10 cm dilated, contractions every 1.5-2 mins lasting 60-90 secs, strong intensity",
+            "Cervix 10 cm dilated, active pushing efforts with crowning"
+        ],
+        answer: 2,
+        rationale: "Transition phase: 8–10 cm dilation, 100% effacement, rapid intense contractions every 1.5–2 minutes lasting 60–90 seconds.",
+        level: "hard"
+    },
+    {
+        q: "A client who underwent an uncomplicated vaginal delivery 15 minutes ago is in the Third Stage of Labor. Which clinical signs indicate separation of the placenta from the uterine wall?",
+        options: [
+            "Lengthening of the umbilical cord, sudden gush of dark blood, firm rounded fundus",
+            "Shortening of the umbilical cord, absence of bleeding, boggy fundus",
+            "Severe maternal hypotension, visible fetal feet at os, bright red blood",
+            "Sudden loss of uterine contractions, sharp epigastric pain"
+        ],
+        answer: 0,
+        rationale: "Signs of placental separation: 1. Lengthening of umbilical cord outside vulva, 2. Sudden trickle or gush of blood, 3. Uterus changing to a globular, firm shape.",
+        level: "hard"
+    },
+    {
+        q: "A client at 31 weeks gestation presents with Premature Rupture of Membranes (PROM). Diagnostic testing is performed. Which combination of test results CONFIRMS amniotic fluid presence?",
+        options: [
+            "Nitrazine paper turns yellow (pH 5.0); fern test negative",
+            "Nitrazine paper turns dark blue (pH 7.0-7.5); fern pattern visible under microscope",
+            "Urine dipstick positive for glucose; white blood cells present",
+            "Nitrazine paper turns orange; urine crystals present"
+        ],
+        answer: 1,
+        rationale: "Amniotic fluid is alkaline (pH 7.0–7.5, turning Nitrazine paper dark blue) and forms a classic 'ferning' arborization pattern when dried on a glass slide.",
+        level: "hard"
+    },
+    {
+        q: "A pregnant client at 34 weeks presents with a fever of 101.2°F (38.4°C), maternal heart rate of 118 bpm, uterine tenderness, and foul-smelling amniotic fluid. Fetal monitoring shows baseline FHR of 172 bpm. What is the primary diagnosis?",
+        options: [
+            "Placental Abruption",
+            "Chorioamnionitis",
+            "HELLP Syndrome",
+            "Normal labor physiological response"
+        ],
+        answer: 1,
+        rationale: "Chorioamnionitis is an intra-amniotic bacterial infection characterized by maternal fever (>100.4°F), maternal and fetal tachycardia, uterine tenderness, and foul amniotic fluid.",
+        level: "hard"
+    },
+    {
+        q: "A nurse is administering Betamethasone to a client at 30 weeks gestation in preterm labor. What is the primary therapeutic goal of this medication?",
+        options: [
+            "To stop uterine contractions and delay delivery indefinitely",
+            "To stimulate fetal surfactant production and accelerate lung maturity",
+            "To prevent maternal seizures associated with severe preeclampsia",
+            "To treat underlying intrauterine bacterial infection"
+        ],
+        answer: 1,
+        rationale: "Betamethasone is an antenatal corticosteroid administered between 24 and 34 weeks gestation to accelerate fetal lung maturation and reduce Respiratory Distress Syndrome (RDS).",
+        level: "hard"
+    },
+    {
+        q: "A client in active labor requests pain relief but wants to avoid systemic medications that affect the fetus. The provider administers a Pudendal Neural Block. The nurse knows this block will provide analgesia to which area?",
+        options: [
+            "Uterine fundus and abdomen during First Stage labor",
+            "Perineum, vulva, and vagino-rectal area during Second Stage labor and episiotomy repair",
+            "Entire body from T10 down to toes",
+            "Cervix only during early dilation"
+        ],
+        answer: 1,
+        rationale: "Pudendal block numbs the pudendal nerve, providing perineal anesthesia for pushing, delivery, and episiotomy repair without systemic fetal effects.",
+        level: "hard"
+    },
+    {
+        q: "A client who received Duramorph (epidural morphine) post-Cesarean section requires monitoring for common side effects. Which set of symptoms represents documented side effects of neuraxial morphine?",
+        options: [
+            "Hypertension, diarrhea, hyperreflexia",
+            "Pruritus (itching), urinary retention, nausea, late respiratory depression",
+            "Seizures, metallic taste, ringing in ears",
+            "Hypoglycemia, uterine atony, hyperthermia"
+        ],
+        answer: 1,
+        rationale: "Epidural/Spinal Morphine commonly causes pruritus (generalized itching), urinary retention, nausea, and central respiratory depression up to 24 hours post-dose.",
+        level: "hard"
+    },
+    {
+        q: "During EFM assessment, the nurse notes early decelerations on the monitor. What is the anatomical cause of early decelerations?",
+        options: [
+            "Uteroplacental insufficiency",
+            "Umbilical cord compression",
+            "Transient fetal head compression during contractions",
+            "Fetal hypoxia and acidosis"
+        ],
+        answer: 2,
+        rationale: "VEAL CHOP: Early decelerations = Head compression. They mirror contractions, are benign, and require no emergency intervention.",
+        level: "hard"
+    },
+    {
+        q: "A client is scheduled for Cervical Ripening with Cervidil (Dinoprostone) insert prior to labor induction. Which finding would CONTRAINDICATE the use of prostaglandin agents?",
+        options: [
+            "Unripe cervix with Bishop score of 3",
+            "History of a prior classical (vertical) Cesarean section scar",
+            "Gestational age of 41 weeks",
+            "Singleton vertex presentation"
+        ],
+        answer: 1,
+        rationale: "Prostaglandins (Cervidil/Cytotec) are CONTRAINDICATED in clients with prior classical (vertical) uterine incisions due to a high risk of uterine rupture.",
+        level: "hard"
+    },
+    {
+        q: "A client with preeclampsia is receiving Magnesium Sulfate. The nurse assesses deep tendon reflexes and documents a grade of 4+. What does a DTR grade of 4+ indicate?",
+        options: [
+            "Absent reflex response",
+            "Normal, active response",
+            "Very brisk, hyperactive response with clonus",
+            "Sluggish or diminished response"
+        ],
+        answer: 2,
+        rationale: "DTR grading scale: 0 = absent, 1+ = hypoactive, 2+ = normal, 3+ = brisk, 4+ = hyperactive with clonus (indicates severe CNS irritability/seizure risk).",
+        level: "hard"
+    },
+    {
+        q: "A nurse is evaluating a fetal heart rate tracing and notes a baseline FHR of 140 bpm with 10 bpm fluctuations over a 1-minute window. How should the nurse document variability?",
+        options: [
+            "Absent variability",
+            "Minimal variability (1–5 bpm)",
+            "Moderate variability (6–25 bpm)",
+            "Marked variability (>25 bpm)"
+        ],
+        answer: 2,
+        rationale: "Moderate variability is defined as peak-to-trough fluctuations of 6 to 25 bpm, indicating intact fetal neurological pathways and adequate oxygenation.",
+        level: "hard"
+    },
+    {
+        q: "Which client finding at 36 weeks gestation requires immediate further clinical workup for Preeclampsia?",
+        options: [
+            "Dependent ankle edema at the end of the day",
+            "Sudden weight gain of 3 lbs in 1 week with facial and hand swelling",
+            "Trace protein in a random urine dipstick",
+            "Mild shortness of breath when climbing stairs"
+        ],
+        answer: 1,
+        rationale: "Rapid weight gain (>1 lb/week) driven by capillary fluid leaking and facial/periorbital edema are classic warning signs of preeclampsia.",
+        level: "hard"
+    },
+    {
+        q: "A primigravida client at 38 weeks states, 'I felt the baby drop lower today, and I can breathe easier, but I feel more pelvic pressure.' What clinical phenomenon has occurred?",
+        options: [
+            "Lightening",
+            "Quickening",
+            "Effacement",
+            "Internal Rotation"
+        ],
+        answer: 0,
+        rationale: "Lightening occurs when the fetal presenting part settles down into the pelvic cavity (engagement), relieving pressure on the diaphragm while increasing pelvic pressure.",
+        level: "hard"
+    },
+    {
+        q: "A nurse is reviewing the fetal position documentation 'LOT'. What does 'LOT' stand for?",
+        options: [
+            "Left Occiput Transverse",
+            "Left Occiput Thyroid",
+            "Lateral Occiput Temporal",
+            "Left Os Transverse"
+        ],
+        answer: 0,
+        rationale: "LOT = Left Occiput Transverse (fetal occiput points towards mother's left side horizontally).",
+        level: "hard"
+    },
+    {
+        q: "During labor induction, the Intrauterine Pressure Catheter (IUPC) shows uterine resting tone is 28 mmHg between contractions. What is the normal baseline resting tone range?",
+        options: [
+            "5 to 15 mmHg",
+            "25 to 35 mmHg",
+            "40 to 50 mmHg",
+            "70 to 90 mmHg"
+        ],
+        answer: 0,
+        rationale: "Normal uterine resting tone on an IUPC is 5–15 mmHg. Elevated resting tone (>20 mmHg) indicates hypertonicity, impeding placental blood refill.",
+        level: "hard"
+    },
+    {
+        q: "A laboring client has reached +3 station. What visual assessment finding correlates with +3 station?",
+        options: [
+            "Fetal head engaged at ischial spines",
+            "Fetal head floating above pelvic inlet",
+            "Crowning of the fetal head at the vaginal opening",
+            "Complete delivery of the infant's shoulders"
+        ],
+        answer: 2,
+        rationale: "Station measures relation to ischial spines (0). +3 station corresponds to crowning at the perineal floor.",
+        level: "hard"
+    },
+    {
+        q: "A client receiving Nifedipine (Procardia) for preterm labor should be monitored closely for which primary maternal side effect?",
+        options: [
+            "Maternal hypertension and bradycardia",
+            "Maternal hypotension and reflex tachycardia",
+            "Severe bronchospasm and pulmonary crackles",
+            "Hyperglycemia and acute oliguria"
+        ],
+        answer: 1,
+        rationale: "Nifedipine is a calcium channel blocker that relaxes smooth muscle. Vasodilation can cause maternal hypotension, dizziness, and reflex tachycardia.",
+        level: "hard"
+    },
+    {
+        q: "What is the recommended maximum limit duration for the Second Stage of labor in a primigravida before medical intervention/evaluations are required?",
+        options: [
+            "30 minutes",
+            "1 hour",
+            "3 hours",
+            "6 hours"
+        ],
+        answer: 2,
+        rationale: "In nulliparous women, the second stage (pushing) is generally allowed up to 3 hours (or 4 hours with epidural) before intervention for prolonged stage 2.",
+        level: "hard"
+    },
+    {
+        q: "A nurse is performing fetal scalp blood sampling on a client with non-reassuring FHR decelerations. The result returns pH 7.18. How should the nurse interpret this value?",
+        options: [
+            "Normal reassuring fetal acid-base balance",
+            "Severe fetal acidosis indicating significant intrauterine hypoxia",
+            "Maternal alkalosis spillover",
+            "Borderline normal finding"
+        ],
+        answer: 1,
+        rationale: "Normal fetal scalp blood pH is ≥7.25. A pH <7.20 indicates fetal acidosis and severe hypoxia, requiring immediate delivery.",
+        level: "hard"
+    },
+    {
+        q: "During an epidural placement test dose, the client suddenly reports a metallic taste in her mouth and auditory ringing (tinnitus). What has occurred?",
+        options: [
+            "Normal expected sensation of epidural analgesia",
+            "Inadvertent intravascular injection of local anesthetic into a blood vessel",
+            "Subarachnoid spinal block entry",
+            "Allergic anaphylactic shock"
+        ],
+        answer: 1,
+        rationale: "A metallic taste, tinnitus, or palpitations during test dose administration indicate IV cannulation/intravascular injection of local anesthetic.",
+        level: "hard"
+    },
+    {
+        q: "A nurse is teaching a diabetic client about caloric distribution during pregnancy. Which macronutrient balance is recommended?",
+        options: [
+            "70% Carbs, 10% Protein, 20% Fat",
+            "40-50% Complex Carbs, 20% Protein, 30-40% Fat",
+            "10% Carbs, 50% Protein, 40% Fat",
+            "30% Carbs, 40% Protein, 30% Fat"
+        ],
+        answer: 1,
+        rationale: "Standard Gestational Diabetes dietary guidelines recommend 40–50% complex carbohydrates, 20% protein, and 30–40% fats across 3 meals and 3 snacks.",
+        level: "hard"
+    },
+    {
+        q: "Which specific mechanism explains why a client with preeclampsia develops hyperreflexia and clonus?",
+        options: [
+            "Increased renal GFR rate",
+            "Central nervous system irritability caused by cerebral vasospasms and edema",
+            "Severe systemic hypokalemia",
+            "Excessive production of fetal surfactant"
+        ],
+        answer: 1,
+        rationale: "Arteriolar vasospasms reduce blood flow to the brain, causing cerebral edema and CNS irritability, manifested as hyperreflexia (3+/4+) and clonus.",
+        level: "hard"
+    },
+    {
+        q: "A client in labor experiences a rapid delivery from first contraction to birth lasting only 2.5 hours. How should this labor be documented?",
+        options: [
+            "Prolonged labor",
+            "Precipitous labor",
+            "Hypotonic labor",
+            "Post-term labor"
+        ],
+        answer: 1,
+        rationale: "Precipitous labor is defined as labor lasting less than 3 hours total from onset of contractions to complete delivery.",
+        level: "hard"
+    },
+    {
+        q: "A post-term pregnancy (>42 weeks) carries increased risk for which intrauterine complication?",
+        options: [
+            "Polyhydramnios",
+            "Placental insufficiency, oligohydramnios, and meconium passage",
+            "Congenital cardiac anomalies",
+            "False labor resolution"
+        ],
+        answer: 1,
+        rationale: "Aging placentas (>42 weeks) suffer vascular degeneration leading to placental insufficiency, reduced amniotic fluid (oligohydramnios), and fetal hypoxia leading to meconium passage.",
+        level: "hard"
+    },
+    {
+        q: "A nurse assesses a laboring client's cervix and documents: '4 cm, 80%, -1'. What does this documentation mean?",
+        options: [
+            "4 cm effaced, 80% dilated, 1 cm below ischial spines",
+            "4 cm dilated, 80% effaced, 1 cm above ischial spines",
+            "4 mm dilated, 80% effaced, +1 station",
+            "4 cm dilated, 80% effaced, head crowned"
+        ],
+        answer: 1,
+        rationale: "Dilation (cm), Effacement (%), Station (cm relative to ischial spines: negative = above, positive = below). '4 cm, 80%, -1' = 4 cm dilated, 80% effaced, 1 cm above spines.",
+        level: "hard"
+    },
+    {
+        q: "Which medication is an opioid antagonist kept on the labor unit to reverse respiratory depression in newborns exposed to maternal intrapartum opioids?",
+        options: [
+            "Naloxone (Narcan)",
+            "Calcium Gluconate",
+            "Ephedrine",
+            "Protamine Sulfate"
+        ],
+        answer: 0,
+        rationale: "Naloxone (Narcan) reverses opioid-induced CNS and respiratory depression.",
+        level: "hard"
+    },
+    {
+        q: "A nurse is caring for a client in spinal anesthesia prior to Cesarean section. To prevent aortocaval compression and severe hypotension during positioning, the nurse should:",
+        options: [
+            "Place the client strictly supine without pillows",
+            "Place a wedge under the client's right hip to tilt her to the left side",
+            "Place the client in Reverse Trendelenburg position",
+            "Keep the client sitting upright at 90 degrees"
+        ],
+        answer: 1,
+        rationale: "Tilting the client laterally using a wedge under the right hip moves the gravid uterus off the inferior vena cava and aorta, preserving blood pressure and fetal perfusion.",
+        level: "hard"
+    },
+    {
+        q: "Which diagnostic scan is used to definitively confirm placenta location when Placenta Previa is suspected at 28 weeks?",
+        options: [
+            "Abdominal/Pelvic Ultrasound",
+            "Pelvic X-ray",
+            "CT scan of pelvis",
+            "Amniocentesis"
+        ],
+        answer: 0,
+        rationale: "Transabdominal or transvaginal ultrasound is the safe, gold-standard imaging modality used to confirm placenta location.",
+        level: "hard"
+    },
+    {
+        q: "An infant delivered following severe placental abruption presents with bruising, petechiae, oozing from the umbilical cord stump, and IV sites. What complication has developed?",
+        options: [
+            "Disseminated Intravascular Coagulation (DIC)",
+            "HELLP Syndrome",
+            "Rh Incompatibility",
+            "Neonatal Jaundice"
+        ],
+        answer: 0,
+        rationale: "Large-scale tissue destruction (like placental abruption) releases massive amounts of thromboplastin, triggering DIC—consuming clotting factors and causing widespread bleeding.",
+        level: "hard"
+    }
+];
+
+let currentQ = 0;
+let userAnswers = new Array(questions.length).fill(null);
+let practiceMode = true;
+
+function initQuiz() {
+    renderGrid();
+    showQuestion(0);
+}
+
+function renderGrid() {
+    const grid = document.getElementById('grid-nav');
+    grid.innerHTML = '';
+    questions.forEach((_, index) => {
+        const item = document.createElement('div');
+        item.className = 'grid-item';
+        item.innerText = index + 1;
+        item.onclick = () => showQuestion(index);
+        grid.appendChild(item);
+    });
+}
+
+function updateGrid() {
+    const items = document.querySelectorAll('.grid-item');
+    items.forEach((item, idx) => {
+        item.className = 'grid-item';
+        if (userAnswers[idx] !== null) item.classList.add('answered');
+        if (idx === currentQ) item.classList.add('active');
+    });
+}
+
+function showQuestion(index) {
+    currentQ = index;
+    const q = questions[index];
+    
+    document.getElementById('progress-text').innerText = `Question ${index + 1} of ${questions.length}`;
+    
+    let html = `
+        <div class="quiz-card active">
+            <div class="q-header">
+                <span>Question ${index + 1}</span>
+                <span class="badge badge-hard">NCLEX HARD</span>
+            </div>
+            <div class="q-text">${q.q}</div>
+            <div class="options-grid">
+    `;
+
+    q.options.forEach((opt, oIdx) => {
+        let optClass = "option-btn";
+        if (userAnswers[index] === oIdx) optClass += " selected";
+        
+        if (practiceMode && userAnswers[index] !== null) {
+            if (oIdx === q.answer) optClass += " correct";
+            else if (userAnswers[index] === oIdx) optClass += " incorrect";
+        }
+
+        html += `<button class="${optClass}" onclick="selectOption(${oIdx})">${opt}</button>`;
+    });
+
+    html += `</div>`;
+
+    if (practiceMode && userAnswers[index] !== null) {
+        html += `
+            <div class="rationale" style="display: block;">
+                <strong>Rationale:</strong> ${q.rationale}
+            </div>
+        `;
+    }
+
+    html += `</div>`;
+
+    document.getElementById('quiz-container').innerHTML = html;
+    document.getElementById('results-card').style.display = 'none';
+
+    document.getElementById('prev-btn').disabled = index === 0;
+    document.getElementById('next-btn').innerText = index === questions.length - 1 ? (practiceMode ? "Finish" : "Submit Test") : "Next";
+
+    updateGrid();
+}
+
+function selectOption(oIdx) {
+    userAnswers[currentQ] = oIdx;
+    showQuestion(currentQ);
+}
+
+function changeQuestion(dir) {
+    if (currentQ + dir >= 0 && currentQ + dir < questions.length) {
+        showQuestion(currentQ + dir);
+    } else if (currentQ + dir === questions.length) {
+        finishQuiz();
+    }
+}
+
+function toggleMode() {
+    practiceMode = !practiceMode;
+    document.getElementById('mode-btn').innerText = practiceMode ? "Switch to Test Mode" : "Switch to Practice Mode";
+    showQuestion(currentQ);
+}
+
+function finishQuiz() {
+    let score = 0;
+    userAnswers.forEach((ans, idx) => {
+        if (ans === questions[idx].answer) score++;
+    });
+
+    document.getElementById('quiz-container').innerHTML = '';
+    document.getElementById('results-card').style.display = 'block';
+    document.getElementById('score-text').innerText = `${score} / ${questions.length}`;
+    
+    const pct = (score / questions.length) * 100;
+    let feedback = "";
+    if (pct >= 85) feedback = "Excellent! You have mastered the Maternity & Intrapartum nursing concepts.";
+    else if (pct >= 70) feedback = "Good effort! Review the rationales for questions you missed.";
+    else feedback = "More review recommended. Re-read the Maternity Exam study guide key points.";
+    
+    document.getElementById('feedback-text').innerText = feedback;
+}
+
+function resetQuiz() {
+    userAnswers = new Array(questions.length).fill(null);
+    currentQ = 0;
+    initQuiz();
+}
+
+initQuiz();
+</script>
+</body>
+</html>
