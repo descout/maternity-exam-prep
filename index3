@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maternity Nursing Practice Exam</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --success: #16a34a;
+            --error: #dc2626;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text: #1e293b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: var(--surface);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0 0 8px 0;
+            color: var(--primary-dark);
+            font-size: 1.8rem;
+        }
+
+        p.subtitle {
+            margin: 0;
+            color: #64748b;
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: space-around;
+            background: var(--primary);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 16px;
+            font-weight: bold;
+        }
+
+        .question-card {
+            background: var(--surface);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgb(0 0 0 / 0.05);
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .question-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+        }
+
+        .options-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0 0 16px 0;
+        }
+
+        .option-item {
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .option-item:hover {
+            background-color: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .option-item.selected {
+            border-color: var(--primary);
+            background-color: #eff6ff;
+        }
+
+        .option-item.correct {
+            background-color: #dcfce7 !important;
+            border-color: var(--success) !important;
+            color: #166534;
+        }
+
+        .option-item.incorrect {
+            background-color: #fee2e2 !important;
+            border-color: var(--error) !important;
+            color: #991b1b;
+        }
+
+        input[type="radio"], input[type="checkbox"] {
+            accent-color: var(--primary);
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .rationale {
+            margin-top: 12px;
+            padding: 12px;
+            background-color: #f8fafc;
+            border-left: 4px solid var(--primary);
+            border-radius: 4px;
+            font-size: 0.95rem;
+            display: none;
+        }
+
+        .rationale.visible {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Maternity Nursing Interactive Exam</h1>
+        <p class="subtitle">Comprehensive Practice Questions & Rationales</p>
+        <div class="score-board">
+            <div>Answered: <span id="answered-count">0</span> / <span id="total-count">0</span></div>
+            <div>Score: <span id="score-count">0</span></div>
+        </div>
+    </header>
+
+    <div id="quiz-container"></div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            id: 1,
+            question: "A woman taking magnesium sulfate has a respiratory rate of 8. In addition to discontinuing the medication, the nurse should:",
+            options: [
+                "Increase her IV fluids",
+                "Instruct her to take deep breaths",
+                "Prepare calcium gluconate",
+                "Vigorously stimulate the woman"
+            ],
+            answer: 2,
+            rationale: "Calcium gluconate is the specific reversal agent/antidote for magnesium sulfate toxicity."
+        },
+        {
+            id: 2,
+            question: "A client who is 38 weeks pregnant is being monitored for pre-eclampsia and suddenly complains of continuous abdominal pain and vaginal bleeding. Which nursing interventions should be included? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Maintain IV hydration with 0.9 NS",
+                "Reassure her that she will be able to have a vaginal delivery",
+                "Monitor intake and output",
+                "Monitor the amount of vaginal bleeding",
+                "Evaluate fetal heart rate",
+                "Evaluate maternal vital signs"
+            ],
+            answer: [0, 2, 3, 4, 5],
+            rationale: "Continuous abdominal pain and dark/vaginal bleeding strongly indicate placental abruption linked to pre-eclampsia. Vaginal delivery cannot be guaranteed (often requires emergency C-section), and fluid status, bleeding, fetal status, and vitals must be strictly tracked."
+        },
+        {
+            id: 3,
+            question: "A primigravida dilated to 5 cm has just received an epidural for pain. She complains of feeling lightheaded and dizzy within 10 minutes, and her BP drops from 120/80 to 80/52 mmHg. Which medication is used in this situation?",
+            options: [
+                "Ephedrine",
+                "Epoetin",
+                "Adrenaline",
+                "Ergonovine maleate"
+            ],
+            answer: 0,
+            rationale: "Ephedrine is the vasopressor of choice to rapidly treat maternal hypotension secondary to epidural anesthesia."
+        },
+        {
+            id: 4,
+            question: "A nurse is caring for a client in active labor and notes persistent late decelerations on the fetal monitor. What are the priority nursing actions? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Administer oxygen at 10 Liters/min via face mask",
+                "Position the client on her left side",
+                "Sit the patient upright at a 45-degree angle",
+                "Increase the infusion rate of the IV",
+                "Administer a non-steroidal pain medication"
+            ],
+            answer: [0, 1, 3],
+            rationale: "Late decelerations indicate uteroplacental insufficiency. Priority interventions include oxygen administration, left-lateral positioning to relieve vena cava compression, and increasing IV fluids to maximize placental perfusion."
+        },
+        {
+            id: 5,
+            question: "When the healthcare provider indicates a shoulder dystocia during the delivery of a macrosomic fetus, which is a priority action by the nurse?",
+            options: [
+                "Prepare for an immediate cesarean delivery",
+                "Calling for a family member to assist",
+                "Utilizing fundal pressure to push the fetus out",
+                "Assisting the woman with the McRoberts maneuver"
+            ],
+            answer: 3,
+            rationale: "McRoberts maneuver (hyperflexion of the mother's legs against her abdomen) is a primary physical maneuver used to resolve shoulder dystocia. Fundal pressure is strictly contraindicated."
+        },
+        {
+            id: 6,
+            question: "A nurse is caring for a client who is in the first stage of labor and observes the umbilical cord protruding from the vagina. Which action should the nurse perform first and foremost?",
+            options: [
+                "Insert a sterile gloved hand into the vagina to relieve pressure off the cord",
+                "Prepare the client for an immediate vaginal birth",
+                "Place the client in knee-chest position",
+                "Cover the cord with a sterile, moist saline dressing"
+            ],
+            answer: 0,
+            rationale: "Manual elevation of the presenting fetal part off the cord via a sterile gloved vaginal hand is the absolute first priority to prevent total fetal anoxia during a cord prolapse."
+        },
+        {
+            id: 7,
+            question: "A client who did not receive prenatal care arrives at 40 weeks gestation and reports saturating two perineal pads with bright red blood in the past hour. Placenta previa is suspected. Which is an appropriate nursing action?",
+            options: [
+                "A magnesium sulfate infusion",
+                "Examination to determine cervical status",
+                "Initiation of pushing",
+                "Preparation for cesarean birth"
+            ],
+            answer: 3,
+            rationale: "Digital or manual cervical examinations are strictly contraindicated in suspected or confirmed placenta previa because they can provoke catastrophic hemorrhage. Preparation for a cesarean birth is indicated."
+        }
+    ];
+
+    let userAnswers = {};
+    let score = 0;
+
+    function initQuiz() {
+        const container = document.getElementById('quiz-container');
+        document.getElementById('total-count').textContent = quizData.length;
+
+        quizData.forEach((q, index) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+
+            let optionsHtml = '';
+            q.options.forEach((opt, optIndex) => {
+                const inputType = q.type === 'checkbox' ? 'checkbox' : 'radio';
+                optionsHtml += `
+                    <label class="option-item" id="opt-${index}-${optIndex}">
+                        <input type="${inputType}" name="q-${index}" value="${optIndex}">
+                        <span>${opt}</span>
+                    </label>
+                `;
+            });
+
+            card.innerHTML = `
+                <div class="question-title">Question ${index + 1}: ${q.question}</div>
+                <div class="options-list">${optionsHtml}</div>
+                <button class="btn" onclick="checkAnswer(${index})">Submit Answer</button>
+                <div class="rationale" id="rationale-${index}"><strong>Rationale:</strong> ${q.rationale}</div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function checkAnswer(index) {
+        const q = quizData[index];
+        const inputs = document.querySelectorAll(`input[name="q-${index}"]`);
+        
+        let selected = [];
+        inputs.forEach((input, optIdx) => {
+            if (input.checked) selected.push(optIdx);
+        });
+
+        if (selected.length === 0) {
+            alert('Please select an option first.');
+            return;
+        }
+
+        let isCorrect = false;
+        if (q.type === 'checkbox') {
+            const sortedSelected = [...selected].sort();
+            const sortedAnswer = [...q.answer].sort();
+            isCorrect = JSON.stringify(sortedSelected) === JSON.stringify(sortedAnswer);
+        } else {
+            isCorrect = selected[0] === q.answer;
+        }
+
+        // Highlight options
+        inputs.forEach((input, optIdx) => {
+            const label = document.getElementById(`opt-${index}-${optIdx}`);
+            if (q.type === 'checkbox') {
+                if (q.answer.includes(optIdx)) {
+                    label.classList.add('correct');
+                } else if (input.checked) {
+                    label.classList.add('incorrect');
+                }
+            } else {
+                if (optIdx === q.answer) {
+                    label.classList.add('correct');
+                } else if (input.checked) {
+                    label.classList.add('incorrect');
+                }
+            }
+            input.disabled = true;
+        });
+
+        // Show rationale
+        document.getElementById(`rationale-${index}`).classList.add('visible');
+        
+        // Track score if first time answering
+        if (!userAnswers[index]) {
+            userAnswers[index] = true;
+            document.getElementById('answered-count').textContent = Object.keys(userAnswers).length;
+            if (isCorrect) {
+                score++;
+                document.getElementById('score-count').textContent = score;
+            }
+        }
+    }
+
+    window.onload = initQuiz;
+</script>
+
+</body>
+</html>
