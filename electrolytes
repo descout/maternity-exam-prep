@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electrolytes and Fluid Balance: Comprehensive Mastery Quiz</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --success: #16a34a;
+            --error: #dc2626;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text: #1e293b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: var(--surface);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0 0 8px 0;
+            color: var(--primary-dark);
+            font-size: 1.8rem;
+        }
+
+        p.subtitle {
+            margin: 0;
+            color: #64748b;
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: space-around;
+            background: var(--primary);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 16px;
+            font-weight: bold;
+        }
+
+        .question-card {
+            background: var(--surface);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgb(0 0 0 / 0.05);
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .question-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+        }
+
+        .options-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0 0 16px 0;
+        }
+
+        .option-item {
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .option-item:hover {
+            background-color: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .option-item.selected {
+            border-color: var(--primary);
+            background-color: #eff6ff;
+        }
+
+        .option-item.correct {
+            background-color: #dcfce7 !important;
+            border-color: var(--success) !important;
+            color: #166534;
+        }
+
+        .option-item.incorrect {
+            background-color: #fee2e2 !important;
+            border-color: var(--error) !important;
+            color: #991b1b;
+        }
+
+        input[type="radio"], input[type="checkbox"] {
+            accent-color: var(--primary);
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .rationale {
+            margin-top: 12px;
+            padding: 12px;
+            background-color: #f8fafc;
+            border-left: 4px solid var(--primary);
+            border-radius: 4px;
+            font-size: 0.95rem;
+            display: none;
+        }
+
+        .rationale.visible {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Electrolytes & Fluid Balance Mastery Exam</h1>
+        <p class="subtitle">50-Question Interactive Practice Exam</p>
+        <div class="score-board">
+            <div>Answered: <span id="answered-count">0</span> / <span id="total-count">0</span></div>
+            <div>Score: <span id="score-count">0</span></div>
+        </div>
+    </header>
+
+    <div id="quiz-container"></div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            id: 1,
+            question: "A client with chronic kidney disease presents with a serum potassium level of 6.8 mEq/L and begins displaying tall, peaked T-waves and a wide QRS complex on the cardiac monitor. What is the highest priority medical intervention that the provider should order first to protect the myocardium?",
+            options: [
+                "Administer regular insulin and dextrose",
+                "Administer IV calcium gluconate",
+                "Administer sodium polystyrene sulfonate (Kayexalate)",
+                "Initiate hemodialysis"
+            ],
+            answer: 1,
+            rationale: "While Kayexalate, insulin/dextrose, and dialysis all help lower or shift potassium, calcium gluconate is the highest priority initial medical intervention because it directly stabilizes and protects the cardiomyocyte membrane from life-threatening arrhythmias (like ventricular fibrillation) caused by severe hyperkalemia."
+        },
+        {
+            id: 2,
+            question: "A nurse is reviewing lab values for a client admitted with acute dehydration. Which of the following lab findings are consistent with a fluid volume deficit (hypovolemia)? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Increased blood urea nitrogen (BUN)",
+                "Decreased hematocrit levels",
+                "Elevated urine specific gravity (>1.025)",
+                "Decreased serum creatinine",
+                "Elevated creatinine indicating renal hypoperfusion"
+            ],
+            answer: [0, 2, 4],
+            rationale: "In hypovolemia, fluid loss concentrates the blood, leading to elevated BUN and creatinine (reflecting decreased kidney perfusion) and a concentrated urine specific gravity. Hematocrit typically increases (hemoconcentration), not decreases, during volume deficit."
+        },
+        {
+            id: 3,
+            question: "A client is receiving an intravenous infusion of a concentrated potassium chloride solution. Which of the following safety protocols must the nurse follow? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Administer the potassium via IV push if the heart rate drops",
+                "Always deliver the infusion utilizing an electronic smart pump",
+                "Ensure the medication bag is inverted side to side to mix thoroughly",
+                "Exceed a maximum infusion rate of 30 mEq/hr to correct levels quickly",
+                "Ensure the solution is properly diluted, as potassium is extremely toxic to veins"
+            ],
+            answer: [1, 2, 4],
+            rationale: "Potassium must never be given via IV push or free-hanging gravity lines; it must always be strictly regulated on a smart infusion pump, thoroughly mixed by inverting the bag side to side, and properly diluted because it is highly vein-toxic. The infusion rate should never exceed 10 mEq per hour safely under standard protocol."
+        },
+        {
+            id: 4,
+            question: "A client with severe hyponatremia secondary to acute cerebral edema is prescribed a hypertonic solution. Which solution is most appropriate to administer?",
+            options: [
+                "0.9% Sodium Chloride (Normal Saline)",
+                "Lactated Ringer's",
+                "3% Sodium Chloride",
+                "0.45% Sodium Chloride (Half-Normal Saline)"
+            ],
+            answer: 2,
+            rationale: "3% Hypertonic saline is specifically indicated for severe hyponatremia accompanied by dangerous cerebral edema to draw fluid back out of swollen brain tissues."
+        },
+        {
+            id: 5,
+            question: "A client is admitted with chronic alcoholism and severe malnutrition. The nurse notes muscle tremors, hyperreflexia, a positive Chvostek's sign, and monitors a lethal cardiac rhythm known as Torsades de Pointes. Which primary electrolyte imbalance is causing these clinical manifestations?",
+            options: [
+                "Hypernatremia",
+                "Hypomagnesemia",
+                "Hypercalcemia",
+                "Hyperphosphatemia"
+            ],
+            answer: 1,
+            rationale: "Hypomagnesemia directly impairs neuromuscular regulation and cardiac stability, causing neuromuscular hyperirritability (tetany, tremors, hyperreflexia) and triggering life-threatening arrhythmias like Torsades de Pointes."
+        },
+        {
+            id: 6,
+            question: "A client is experiencing hyperkalemia who has active bowel sounds. Before the provider or nurse administers sodium polystyrene sulfonate (Kayexalate), what must be assessed first?",
+            options: [
+                "Deep tendon reflexes",
+                "Presence and activity of bowel sounds",
+                "Hourly urine output",
+                "Visual acuity and pupillary response"
+            ],
+            answer: 1,
+            rationale: "Kayexalate works by binding potassium in the gastrointestinal tract and excreting it via diarrhea. If a patient has hypoactive or absent bowel sounds (paralytic ileus), administering Kayexalate can cause severe intestinal necrosis or impaction."
+        },
+        {
+            id: 7,
+            question: "Which of the following hormones act to raise or lower serum calcium levels in the body?",
+            options: [
+                "Insulin and Glucagon",
+                "Antidiuretic Hormone (ADH) and Aldosterone",
+                "Parathyroid Hormone (PTH) and Calcitonin",
+                "Cortisol and Epinephrine"
+            ],
+            answer: 2,
+            rationale: "Parathyroid hormone (PTH) raises serum calcium levels, whereas calcitonin attempts to bring elevated calcium levels back down."
+        },
+        {
+            id: 8,
+            question: "A client is diagnosed with tumor lysis syndrome (TLS) following chemotherapy. Which electrolyte abnormalities are classically expected due to massive cell destruction releasing intracellular contents into the bloodstream? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Hyperkalemia",
+                "Hyperphosphatemia",
+                "Hypocalcemia",
+                "Hypermagnesemia",
+                "Hypokalemia"
+            ],
+            answer: [0, 1, 2, 3],
+            rationale: "Intracellular contents released during massive cellular breakdown (such as in TLS or rhabdomyolysis) flood the ECF with potassium, phosphorus, and magnesium, while the excess circulating phosphorus binds to calcium, resulting in secondary hypocalcemia."
+        },
+        {
+            id: 9,
+            question: "A client presents with lethargy, confusion, deep rapid (Kussmaul) respirations, and a fruity acetone breath odor. Laboratory testing shows a blood glucose of 380 mg/dL, a pH of 7.22, and serum bicarbonate of 14 mEq/L. What is the first nursing intervention when this patient arrives at the hospital?",
+            options: [
+                "Administer a subcutaneous dose of regular insulin",
+                "Initiate fluid resuscitation with 0.9% Normal Saline",
+                "Administer 50% Dextrose via IV push",
+                "Give an oral dose of sodium bicarbonate"
+            ],
+            answer: 1,
+            rationale: "For a client presenting with Diabetic Ketoacidosis (DKA), correcting profound dehydration through IV fluid resuscitation (0.9% NaCl) is the absolute first priority step before or alongside insulin administration."
+        },
+        {
+            id: 10,
+            question: "A client with hypervolemia is presenting with peripheral edema, lung crackles, jugular venous distension, and bounding pulses. Which potent loop diuretic is noted in the text to be roughly 40% more potent than Lasix?",
+            options: [
+                "Hydrochlorothiazide",
+                "Bumex (bumetanide)",
+                "Spironolactone",
+                "Mannitol"
+            ],
+            answer: 1,
+            rationale: "Bumex is a high-ceiling loop diuretic that is significantly more potent (approximately 40% more potent than furosemide/Lasix) in managing severe fluid overload."
+        },
+        {
+            id: 11,
+            question: "Which clinical manifestations are classic signs of Hypocalcemia? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Positive Trousseau's sign",
+                "Positive Chvostek's sign",
+                "Shortened QT interval on ECG",
+                "Laryngospasms and stridor",
+                "Bone pain and kidney stones"
+            ],
+            answer: [0, 1, 3],
+            rationale: "Hypocalcemia causes neuromuscular hyperexcitability, manifesting as positive Chvostek's and Trousseau's signs, laryngeal/bronchospasms, and tetany. Shortened QT intervals and kidney stones are classic features of hypercalcemia."
+        },
+        {
+            id: 12,
+            question: "A client is scheduled for a diagnostic procedure requiring iodinated IV contrast dye. The client takes Metformin (Glucophage) for type 2 diabetes. What critical nursing action must be taken regarding this medication?",
+            options: [
+                "Double the dose on the morning of the test to prevent hyperglycemia",
+                "Discontinue Metformin at least 2 days (48 hours) before the procedure",
+                "Switch the client to an oral sulfonylurea temporarily",
+                "Administer Metformin only via IV piggyback during the scan"
+            ],
+            answer: 1,
+            rationale: "Metformin is contraindicated in patients with renal impairment or those receiving IV contrast media. It must be stopped at least 48 hours prior to diagnostic contrast testing to prevent lactic acidosis."
+        },
+        {
+            id: 13,
+            question: "A client is found to have a serum sodium level of 118 mEq/L due to excess water retention and primary fluid overload. Which of the following medical and nursing management strategies should be implemented? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Strict fluid restriction (typically under 1000 mL/day)",
+                "Administration of massive oral sodium boluses",
+                "Daily weights using the same scale at the same time each day",
+                "Frequent neurological checks for signs of cerebral edema",
+                "Administration of 3% hypertonic saline if symptoms are severe"
+            ],
+            answer: [0, 2, 3, 4],
+            rationale: "Management of severe hyponatremia/fluid overload includes fluid restriction, daily weights, frequent neuro checks (monitoring for lethargy, confusion, or seizures from cerebral edema), and hypertonic 3% saline for severe deficits."
+        },
+        {
+            id: 14,
+            question: "When differentiating between Diabetic Ketoacidosis (DKA) and Hyperosmolar Hyperglycemic Nonketotic Syndrome (HHNS), which key diagnostic feature is typically absent in HHNS?",
+            options: [
+                "Extreme hyperglycemia (>600 mg/dL)",
+                "Profound dehydration",
+                "Ketosis and metabolic acidosis",
+                "Altered mental status"
+            ],
+            answer: 2,
+            rationale: "The hallmark distinction between DKA and HHNS is the absence of significant ketosis and metabolic acidosis in HHNS, because type 2 diabetes patients retain enough circulating insulin to prevent fat breakdown into ketones."
+        },
+        {
+            id: 15,
+            question: "A client experiencing refeeding syndrome after prolonged starvation is at immediate risk for which dangerous intracellular electrolyte shifts? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Severe hypophosphatemia",
+                "Severe hypokalemia",
+                "Severe hypomagnesemia",
+                "Hypercalcemia",
+                "Hypernatremia"
+            ],
+            answer: [0, 1, 2],
+            rationale: "Refeeding syndrome causes a rapid surge in insulin as nutrition is reintroduced, driving phosphate, potassium, and magnesium swiftly into the cells, leading to profound serum depletions (hypophosphatemia being the primary hallmark)."
+        },
+        {
+            id: 16,
+            question: "What is the primary physiological function of potassium within the extracellular and intracellular fluid compartments?",
+            options: [
+                "Primary control of extracellular water distribution and osmotic pressure",
+                "Essential role in the depolarization and repolarization of nerve and cardiac muscle cells",
+                "Acting as the primary blood clotting factor",
+                "Maintaining structural rigidity in bones and teeth"
+            ],
+            answer: 1,
+            rationale: "Potassium is the major intracellular electrolyte vital for maintaining resting membrane potentials and supporting the depolarization and repolarization of nerve and cardiac muscle cells."
+        },
+        {
+            id: 17,
+            question: "A client with hypercalcemia resulting from hyperparathyroidism exhibits which clinical presentation?",
+            options: [
+                "Tetany and positive Trousseau's sign",
+                "Constipation, bone pain, kidney stones, and abdominal pain ('Stones, bones, groans, and moans')",
+                "Hyperactive bowel sounds and explosive diarrhea",
+                "Prolonged QT intervals and smooth muscle bronchospasms"
+            ],
+            answer: 1,
+            rationale: "Hypercalcemia depresses neuromuscular and gastrointestinal function, producing the classic mnemonic: 'stones' (kidney stones), 'bones' (bone pain/fractures), 'groans' (constipation/abdominal pain), and 'moans' (psychological depression/confusion)."
+        },
+        {
+            id: 18,
+            question: "A client is diagnosed with Diabetes Insipidus (DI). Which fluid or electrolyte disturbance is most directly associated with this condition?",
+            options: [
+                "Hyponatremia due to water intoxication",
+                "Hypernatremia resulting from excessive loss of free water without sodium",
+                "Hyperkalemia from renal potassium retention",
+                "Hypomagnesemia from intestinal malabsorption"
+            ],
+            answer: 1,
+            rationale: "Diabetes insipidus involves a deficiency of antidiuretic hormone (ADH) or kidney response, causing massive excretion of dilute urine and leading to hypernatremia due to pure water loss."
+        },
+        {
+            id: 19,
+            question: "When managing a patient with hypophosphatemia, mild deficiencies are managed by increasing dietary intake of phosphate-rich foods. Which foods are high in dietary phosphorus? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Milk and dairy products",
+                "Whole grains",
+                "Poultry and fish",
+                "Legumes",
+                "Purified low-sodium water only"
+            ],
+            answer: [0, 1, 2, 3],
+            rationale: "Dietary phosphate is rich in dairy products (milk), whole grains, poultry, fish, and legumes."
+        },
+        {
+            id: 20,
+            question: "A client is experiencing an acute hypoglycemic episode with a blood glucose level of 52 mg/dL but is alert, conscious, and able to swallow safely. According to the Rule of 15, what is the appropriate immediate intervention?",
+            options: [
+                "Administer 1 mg of Glucagon subcutaneously",
+                "Give 15 g of a simple, fast-acting carbohydrate and recheck in 15 minutes",
+                "Administer 50% Dextrose (50 mL) via rapid IV push",
+                "Wait 30 minutes and recheck the blood glucose without giving food"
+            ],
+            answer: 1,
+            rationale: "For a conscious, alert patient with hypoglycemia (<70 mg/dL), administer 15 g of simple carbohydrates following the Rule of 15, then recheck blood glucose after 15 minutes."
+        },
+        {
+            id: 21,
+            question: "A client is noted to have a serum magnesium level of 2.8 mEq/L (elevated) due to overuse of magnesium-containing antacids and renal failure. Which physical assessment findings are expected in moderate-to-severe hypermagnesemia? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Hyperactive deep tendon reflexes and muscle tremors",
+                "Flushing and lethargy (early signs)",
+                "Hypotension and bradycardia",
+                "Respiratory depression and potential cardiac arrest",
+                "Tachycardia and severe hypertension"
+            ],
+            answer: [1, 2, 3],
+            rationale: "Hypermagnesemia depresses the central nervous and cardiovascular systems. Early signs include flushing/lethargy, progressing to moderate hypotension and bradycardia, and severe respiratory depression, coma, or cardiac arrest."
+        },
+        {
+            id: 22,
+            question: "Which intravenous fluid is classified as isotonic and is typically the safest initial fluid resuscitation choice for hypovolemia or DKA?",
+            options: [
+                "0.45% Sodium Chloride (Half-Normal Saline)",
+                "3% Sodium Chloride",
+                "0.9% Sodium Chloride (Normal Saline)",
+                "Dextrose 10% in Water (D10W)"
+            ],
+            answer: 2,
+            rationale: "0.9% Normal Saline is an isotonic crystalloid solution that remains in the extracellular space, making it the primary and safest fluid choice for initial volume resuscitation and DKA management."
+        },
+        {
+            id: 23,
+            question: "What is the primary mechanism of action of potassium-sparing or loop diuretics regarding electrolyte balance?",
+            options: [
+                "They cause direct calcium reabsorption in bone matrix",
+                "Loop and thiazide diuretics can cause excessive renal losses of potassium and magnesium",
+                "They force the kidneys to retain all electrolytes unconditionally",
+                "They block the sodium-potassium pump permanently in red blood cells"
+            ],
+            answer: 1,
+            rationale: "Loop and thiazide diuretics promote urinary excretion of water and electrolytes, frequently leading to renal depletion of potassium and magnesium (hypokalemia and hypomagnesemia)."
+        },
+        {
+            id: 24,
+            question: "A client presents with chronic renal failure and severe hyperphosphatemia (6.2 mg/dL). Which medication class is commonly prescribed to bind phosphorus in the gastrointestinal tract and promote its excretion?",
+            options: [
+                "Phosphate binders (e.g., Calcium carbonate, Sevelamer)",
+                "Potassium chloride supplements",
+                "Loop diuretics administered without hydration",
+                "Rapid-acting insulin infusions"
+            ],
+            answer: 0,
+            rationale: "Phosphate binders such as calcium carbonate or sevelamer are prescribed to bind dietary phosphorus in the gut, preventing its absorption in patients with chronic kidney disease and hyperphosphatemia."
+        },
+        {
+            id: 25,
+            question: "What is the normal laboratory reference range for serum sodium?",
+            options: [
+                "3.5 - 5.0 mEq/L",
+                "1.3 - 2.1 mEq/L",
+                "135 - 145 mEq/L",
+                "9.0 - 10.5 mg/dL"
+            ],
+            answer: 2,
+            rationale: "The normal extracellular serum sodium range is 135 - 145 mEq/L."
+        },
+        {
+            id: 26,
+            question: "A client with hypokalemia displays specific electrocardiographic (ECG) changes. Which findings are classically associated with low potassium levels? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Flattened or inverted T waves",
+                "ST segment depression",
+                "Tall, peaked T waves",
+                "Prominent (high) U waves in severe cases",
+                "Sine wave pattern"
+            ],
+            answer: [0, 1, 3],
+            rationale: "Hypokalemia characteristically causes flattened/inverted T waves, ST depression, and prominent U waves. Tall, peaked T waves and sine waves are features of hyperkalemia."
+        },
+        {
+            id: 27,
+            question: "Which clinical manifestations are primarily observed during acute hyponatremia due to cellular swelling in the central nervous system?",
+            options: [
+                "Extreme thirst and dry, wrinkled skin",
+                "Headache, restlessness, irritability, and seizures progressing to cerebral edema",
+                "Bone fractures and kidney stone formation",
+                "Flushing, hypotension, and profound bradycardia"
+            ],
+            answer: 1,
+            rationale: "Hyponatremia causes water to shift intracellularly, leading to cerebral edema that manifests neurologically as headache, irritability, confusion, restlessness, and seizures."
+        },
+        {
+            id: 28,
+            question: "A client with chronic kidney disease has impaired conversion of Vitamin D. Which secondary electrolyte imbalance is directly triggered by this deficiency?",
+            options: [
+                "Hypernatremia",
+                "Hypocalcemia",
+                "Hypomagnesemia",
+                "Hyperkalemia"
+            ],
+            answer: 1,
+            rationale: "Vitamin D is required for active intestinal absorption of calcium. Chronic kidney disease impairs Vitamin D conversion, resulting in decreased calcium absorption and subsequent hypocalcemia."
+        },
+        {
+            id: 29,
+            question: "When administering IV replacement therapy for hypomagnesemia, which oral or IV preparation is frequently utilized for severe deficiency?",
+            options: [
+                "Magnesium gluconate / Magnesium sulfate IV",
+                "Sodium polystyrene sulfonate",
+                "Calcium chloride push",
+                "Regular insulin mixed with sterile water"
+            ],
+            answer: 0,
+            rationale: "Severe magnesium deficits are managed using oral supplements or IV magnesium gluconate/sulfate."
+        },
+        {
+            id: 30,
+            question: "What is the normal laboratory reference range for serum potassium?",
+            options: [
+                "135 - 145 mEq/L",
+                "3.5 - 5.0 mEq/L",
+                "3.0 - 4.5 mg/dL",
+                "9.0 - 10.5 mg/dL"
+            ],
+            answer: 1,
+            rationale: "The normal reference range for serum potassium is 3.5 - 5.0 mEq/L."
+        },
+        {
+            id: 31,
+            question: "A client receiving total parenteral nutrition (TPN) experiences acute confusion, tremors, and cardiac arrhythmias. Lab tests reveal a critically low phosphate level (1.2 mg/dL). What condition is this patient most likely experiencing?",
+            options: [
+                "Refeeding syndrome with severe hypophosphatemia",
+                "Hyperosmolar hyperglycemic state (HHS)",
+                "Acute hypercalcemia crisis",
+                "Magnesium toxicity"
+            ],
+            answer: 0,
+            rationale: "Aggressive nutrition reintroduction (such as via TPN or feeding after starvation) drives phosphorus intracellularly, causing refeeding syndrome characterized by severe hypophosphatemia, central nervous system depression, and muscle weakness."
+        },
+        {
+            id: 32,
+            question: "Which hormone, secreted by the parathyroid glands, functions to raise blood calcium levels?",
+            options: [
+                "Calcitonin",
+                "Insulin",
+                "Parathyroid hormone (PTH)",
+                "Aldosterone"
+            ],
+            answer: 2,
+            rationale: "Parathyroid hormone (PTH) acts to elevate serum calcium levels, whereas calcitonin works in opposition to lower them."
+        },
+        {
+            id: 33,
+            question: "A client with hyperkalemia is treated with regular insulin and a dextrose IV infusion. What is the specific physiological purpose of adding dextrose?",
+            options: [
+                "To enhance the diuretic effect of the infusion",
+                "To prevent severe hypoglycemia while insulin drives potassium into the cells",
+                "To raise systemic blood pressure in hypotensive patients",
+                "To bind excess phosphate in the bloodstream"
+            ],
+            answer: 1,
+            rationale: "Insulin shifts potassium from the extracellular fluid into the intracellular space to lower serum levels, and dextrose is co-administered to prevent the patient from developing dangerous insulin-induced hypoglycemia."
+        },
+        {
+            id: 34,
+            question: "What is the normal laboratory reference range for serum calcium?",
+            options: [
+                "1.3 - 2.1 mEq/L",
+                "3.0 - 4.5 mg/dL",
+                "9.0 - 10.5 mg/dL",
+                "135 - 145 mEq/L"
+            ],
+            answer: 2,
+            rationale: "The normal range for serum calcium is 9.0 - 10.5 mg/dL."
+        },
+        {
+            id: 35,
+            question: "Which physical maneuver or assessment is used to test for hypocalcemia by tapping on the facial nerve 2 cm below the earlobe, resulting in unilateral facial twitching?",
+            options: [
+                "Trousseau's sign",
+                "Chvostek's sign",
+                "Monofilament test",
+                "Digital rectal examination (DRE)"
+            ],
+            answer: 1,
+            rationale: "Tapping the facial nerve to elicit facial muscle twitching is known as a positive Chvostek's sign, a hallmark of neuromuscular hyperexcitability seen in hypocalcemia and hypomagnesemia."
+        },
+        {
+            id: 36,
+            question: "A client presents with lethargy, deep tendon reflex depression, nausea, and facial flushing following excessive ingestion of magnesium-containing antacids (Milk of Magnesia). What is the initial emergency medical antidote if severe cardiovascular or respiratory depression occurs?",
+            options: [
+                "Intravenous Calcium Gluconate",
+                "Intravenous Potassium Chloride",
+                "Regular Insulin drip",
+                "Hypertonic 3% Saline"
+            ],
+            answer: 0,
+            rationale: "Intravenous calcium gluconate acts as a direct physiological antagonist to magnesium and is administered to reverse severe neuromuscular and cardiac toxicity caused by hypermagnesemia."
+        },
+        {
+            id: 37,
+            question: "What is the normal laboratory reference range for serum phosphorus (phosphate)?",
+            options: [
+                "9.0 - 10.5 mg/dL",
+                "3.0 - 4.5 mg/dL",
+                "1.3 - 2.1 mEq/L",
+                "3.5 - 5.0 mEq/L"
+            ],
+            answer: 1,
+            rationale: "The normal reference range for serum phosphate is 3.0 - 4.5 mg/dL."
+        },
+        {
+            id: 38,
+            question: "A client with chronic renal failure is at risk for hyperphosphatemia. Which inverse electrolyte relationship governs the interaction between serum phosphate and calcium?",
+            options: [
+                "When phosphate levels increase, calcium levels typically decrease",
+                "When phosphate levels increase, calcium levels always increase synchronously",
+                "Phosphorus and calcium have no biological relationship",
+                "Calcium controls the renal excretion of sodium exclusively"
+            ],
+            answer: 0,
+            rationale: "Calcium and phosphorus share an inverse relationship in the body; as one rises, the other generally drops (though renal failure can disrupt normal excretion balance)."
+        },
+        {
+            id: 39,
+            question: "A client with severe hypokalemia experiences muscle weakness that typically starts in which anatomical region and progresses upward?",
+            options: [
+                "The upper extremities and hands",
+                "The lower extremities (legs) and moves upward",
+                "The facial muscles and jaw",
+                "The respiratory diaphragm directly"
+            ],
+            answer: 1,
+            rationale: "Neuromuscular manifestations of hypokalemia classically feature muscle weakness that originates in the lower extremities (legs) and moves upward, potentially leading to respiratory muscle failure if severe."
+        },
+        {
+            id: 40,
+            question: "What is the normal laboratory reference range for serum magnesium?",
+            options: [
+                "1.3 - 2.1 mEq/L",
+                "3.5 - 5.0 mEq/L",
+                "135 - 145 mEq/L",
+                "9.0 - 10.5 mg/dL"
+            ],
+            answer: 0,
+            rationale: "The normal reference range for serum magnesium is 1.3 - 2.1 mEq/L."
+        },
+        {
+            id: 41,
+            question: "A client receiving massive whole blood transfusions rapidly develops circumoral numbness, tingling, and carpopedal spasms. What is the underlying mechanism causing this acute calcium drop?",
+            options: [
+                "Citrate contained in blood products binds with circulating serum calcium",
+                "Red blood cells absorb all extracellular potassium",
+                "Platelets destroy parathyroid tissue instantly",
+                "Whole blood acts as a hypertonic sodium solution"
+            ],
+            answer: 0,
+            rationale: "Massive blood transfusions introduce citrate, an anticoagulant that binds to ionized calcium in the recipient's blood, precipitating acute hypocalcemia."
+        },
+        {
+            id: 42,
+            question: "Which clinical manifestations are associated with hypernatremia due to cellular dehydration?",
+            options: [
+                "Altered mental status, dry sticky mucous membranes, dry/wrinkled skin, and intense thirst",
+                "Hyperactive bowel sounds, tetany, and positive Chvostek's sign",
+                "Peripheral edema, jugular venous distension, and crackles",
+                "Muscle flaccidity and sine wave ECG patterns"
+            ],
+            answer: 0,
+            rationale: "Hypernatremia represents a hyperosmolar state where water is pulled out of cells, causing primarily neurological symptoms (altered mental status), dry sticky mucous membranes, and intense thirst."
+        },
+        {
+            id: 43,
+            question: "When a client experiences prolonged vomiting, nasogastric (NG) tube suctioning, or diuretic therapy, which electrolyte imbalance is most commonly precipitated?",
+            options: [
+                "Hyperkalemia",
+                "Hypokalemia",
+                "Hyperphosphatemia",
+                "Hypercalcemia"
+            ],
+            answer: 1,
+            rationale: "Upper GI losses (vomiting, NG suction) and renal wasting from diuretics result in substantial loss of potassium, leading to hypokalemia."
+        },
+        {
+            id: 44,
+            question: "A client with chronic kidney disease develops soft tissue calcification, vascular calcification, and painful calcium-phosphate crystal deposits in the skin due to an inability to excrete waste products. What primary electrolyte disturbance caused this?",
+            options: [
+                "Hyperphosphatemia",
+                "Hypomagnesemia",
+                "Hypernatremia",
+                "Hypokalemia"
+            ],
+            answer: 0,
+            rationale: "In renal failure, failing kidneys cannot excrete phosphorus, leading to hyperphosphatemia, which precipitates metastatic calcifications in soft tissues and blood vessels when calcium-phosphate products exceed critical limits."
+        },
+        {
+            id: 45,
+            question: "What is the primary extracellular electrolyte responsible for controlling water distribution and generating nerve impulses?",
+            options: [
+                "Potassium",
+                "Sodium",
+                "Magnesium",
+                "Phosphorus"
+            ],
+            answer: 1,
+            rationale: "Sodium is the most abundant electrolyte in the ECF and is the primary controller of water distribution, fluid volume, and nerve/muscle impulse generation."
+        },
+        {
+            id: 46,
+            question: "Which finding indicates that a client with hypokalemia is experiencing gastrointestinal complications?",
+            options: [
+                "Severe abdominal distension and paralytic ileus",
+                "Explosive watery diarrhea",
+                "Hyperactive bowel sounds and biliary colic",
+                "Immediate duodenal ulcer perforation"
+            ],
+            answer: 0,
+            rationale: "Hypokalemia slows smooth muscle motility throughout the GI tract, resulting in decreased bowel sounds, constipation, abdominal distension, and potentially paralytic ileus in severe cases."
+        },
+        {
+            id: 47,
+            question: "When caring for a client with hyperkalemia, which ECG waveform abnormality is considered the earliest and most classic indicator of cardiac irritability?",
+            options: [
+                "Flattened T waves",
+                "Taller, peaked T waves",
+                "Prominent U waves",
+                "Prolonged QT intervals"
+            ],
+            answer: 1,
+            rationale: "The earliest classic ECG sign of rising serum potassium is the appearance of tall, peaked T waves, which can progress to widened QRS complexes and sine waves if untreated."
+        },
+        {
+            id: 48,
+            question: "A client with severe hypocalcemia is prescribed IV calcium replacement therapy. Between calcium gluconate and calcium chloride, which agent is generally preferred and why?",
+            options: [
+                "Calcium chloride is preferred because it contains zero elemental calcium",
+                "Calcium gluconate is preferred because it is less irritating to veins and protects the heart better",
+                "Calcium chloride is preferred because it can be administered via IM injection safely",
+                "There is no clinical difference between the two agents"
+            ],
+            answer: 1,
+            rationale: "Calcium gluconate is preferred over calcium chloride for IV administration because it carries a lower risk of severe venous irritation/necrosis and provides effective cardiac protection."
+        },
+        {
+            id: 49,
+            question: "A client with primary hyperparathyroidism presents with polyuria and polydipsia resembling diabetes insipidus. What is the underlying electrolyte disturbance causing these renal symptoms?",
+            options: [
+                "Hypercalcemia",
+                "Hyponatremia",
+                "Hypokalemia",
+                "Hypermagnesemia"
+            ],
+            answer: 0,
+            rationale: "High levels of serum calcium (hypercalcemia) impair the kidney's ability to concentrate urine, leading to nephrogenic diabetes insipidus symptoms such as polyuria and polydipsia."
+        },
+        {
+            id: 50,
+            question: "Which nursing intervention is critical when monitoring a patient receiving intravenous infusions of hypertonic solutions (such as 3% Saline) or potent diuretics?",
+            options: [
+                "Monitoring for signs of fluid overload, pulmonary edema, and strict intake/output",
+                "Encouraging strict water restriction without tracking urine output",
+                "Checking deep tendon reflexes every 12 hours exclusively",
+                "Administering oral sodium chloride tablets concurrently"
+            ],
+            answer: 0,
+            rationale: "Administering hypertonic solutions or managing fluid shifts requires rigorous monitoring for fluid volume overload, pulmonary edema, vital sign changes, and strict intake and output."
+        }
+    ];
+
+    let userAnswers = {};
+    let score = 0;
+
+    function initQuiz() {
+        const container = document.getElementById('quiz-container');
+        document.getElementById('total-count').textContent = quizData.length;
+
+        quizData.forEach((q, index) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+
+            let optionsHtml = '';
+            q.options.forEach((opt, optIndex) => {
+                const inputType = q.type === 'checkbox' ? 'checkbox' : 'radio';
+                optionsHtml += `
+                    <label class="option-item" id="opt-${index}-${optIndex}">
+                        <input type="${inputType}" name="q-${index}" value="${optIndex}">
+                        <span>${opt}</span>
+                    </label>
+                `;
+            });
+
+            card.innerHTML = `
+                <div class="question-title">Question ${index + 1}: ${q.question}</div>
+                <div class="options-list">${optionsHtml}</div>
+                <button class="btn" onclick="checkAnswer(${index})">Submit Answer</button>
+                <div class="rationale" id="rationale-${index}"><strong>Rationale:</strong> ${q.rationale}</div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function checkAnswer(index) {
+        const q = quizData[index];
+        const inputs = document.querySelectorAll(`input[name="q-${index}"]`);
+        
+        let selected = [];
+        inputs.forEach((input, optIdx) => {
+            if (input.checked) selected.push(optIdx);
+        });
+
+        if (selected.length === 0) {
+            alert('Please select an option first.');
+            return;
+        }
+
+        let isCorrect = false;
+        if (q.type === 'checkbox') {
+            const sortedSelected = [...selected].sort();
+            const sortedAnswer = [...q.answer].sort();
+            isCorrect = JSON.stringify(sortedSelected) === JSON.stringify(sortedAnswer);
+        } else {
+            isCorrect = selected[0] === q.answer;
+        }
+
+        // Highlight options
+        inputs.forEach((input, optIdx) => {
+            const label = document.getElementById(`opt-${index}-${optIdx}`);
+            if (q.type === 'checkbox') {
+                if (q.answer.includes(optIdx)) {
+                    label.classList.add('correct');
+                } else if (input.checked) {
+                    label.classList.add('incorrect');
+                }
+            } else {
+                if (optIdx === q.answer) {
+                    label.classList.add('correct');
+                } else if (input.checked) {
+                    label.classList.add('incorrect');
+                }
+            }
+            input.disabled = true;
+        });
+
+        // Show rationale
+        document.getElementById(`rationale-${index}`).classList.add('visible');
+        
+        // Track score if first time answering
+        if (!userAnswers[index]) {
+            userAnswers[index] = true;
+            document.getElementById('answered-count').textContent = Object.keys(userAnswers).length;
+            if (isCorrect) {
+                score++;
+                document.getElementById('score-count').textContent = score;
+            }
+        }
+    }
+
+    window.onload = initQuiz;
+</script>
+
+</body>
+</html>
