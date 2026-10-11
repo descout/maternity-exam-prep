@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Renal, Urologic, & Male Reproductive Problems Mastery Exam</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --success: #16a34a;
+            --error: #dc2626;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text: #1e293b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: var(--surface);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0 0 8px 0;
+            color: var(--primary-dark);
+            font-size: 1.8rem;
+        }
+
+        p.subtitle {
+            margin: 0;
+            color: #64748b;
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: space-around;
+            background: var(--primary);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 16px;
+            font-weight: bold;
+        }
+
+        .question-card {
+            background: var(--surface);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgb(0 0 0 / 0.05);
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .question-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+        }
+
+        .options-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0 0 16px 0;
+        }
+
+        .option-item {
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .option-item:hover {
+            background-color: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .option-item.selected {
+            border-color: var(--primary);
+            background-color: #eff6ff;
+        }
+
+        .option-item.correct {
+            background-color: #dcfce7 !important;
+            border-color: var(--success) !important;
+            color: #166534;
+        }
+
+        .option-item.incorrect {
+            background-color: #fee2e2 !important;
+            border-color: var(--error) !important;
+            color: #991b1b;
+        }
+
+        input[type="radio"], input[type="checkbox"] {
+            accent-color: var(--primary);
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .rationale {
+            margin-top: 12px;
+            padding: 12px;
+            background-color: #f8fafc;
+            border-left: 4px solid var(--primary);
+            border-radius: 4px;
+            font-size: 0.95rem;
+            display: none;
+        }
+
+        .rationale.visible {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Renal, Urologic, & Male Reproductive Problems Mastery Exam</h1>
+        <p class="subtitle">50-Question Interactive Practice Exam</p>
+        <div class="score-board">
+            <div>Answered: <span id="answered-count">0</span> / <span id="total-count">0</span></div>
+            <div>Score: <span id="score-count">0</span></div>
+        </div>
+    </header>
+
+    <div id="quiz-container"></div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            id: 1,
+            question: "Benign Prostatic Hyperplasia (BPH) is primarily caused by an enlargement resulting from hyperplasia of which lobes of the prostate gland?",
+            options: [
+                "Lateral lobes[cite: 341]",
+                "Anterior lobes exclusively",
+                "Seminal vesicles",
+                "The membranous urethra"
+            ],
+            answer: 0,
+            rationale: "BPH is caused by hyperplasia of the lateral lobes of the prostate gland, which obstructs urine outflow as men age[cite: 341]."
+        },
+        {
+            id: 2,
+            question: "What are the common obstructive symptoms associated with Benign Prostatic Hyperplasia (BPH)? (Select all that apply)[cite: 341]",
+            type: "checkbox",
+            options: [
+                "Difficulty starting urine flow[cite: 341]",
+                "Poor urinary stream[cite: 341]",
+                "Dribbling at the end of urinating[cite: 341]",
+                "Sensation of incomplete bladder emptying[cite: 341]",
+                "Sudden explosive watery diarrhea"
+            ],
+            answer: [0, 1, 2, 3],
+            rationale: "Obstructive symptoms of BPH include difficulty starting urine flow, decreased outflow volume, poor stream, terminal dribbling, and incomplete bladder emptying[cite: 341]."
+        },
+        {
+            id: 3,
+            question: "Which symptom is typically noted as the **first** irritative symptom experienced by a patient developing BPH?",
+            options: [
+                "Nocturia[cite: 341]",
+                "Total urinary incontinence",
+                "Severe flank pain",
+                "Gross painless hematuria"
+            ],
+            answer: 0,
+            rationale: "Nocturia is very frequently reported as the first irritative symptom of BPH[cite: 341]."
+        },
+        {
+            id: 4,
+            question: "What is the first-line nursing and medical intervention for an older adult client who presents with acute urinary retention due to BPH?",
+            options: [
+                "Catheter insertion (indwelling or straight catheter)[cite: 342]",
+                "Immediate radical prostatectomy surgery",
+                "Immediate administration of oral potassium",
+                "Encouraging a dry diet with zero fluids"
+            ],
+            answer: 0,
+            rationale: "Catheter insertion is the first-line intervention for acute urinary retention, especially in older adults, though a prescription is required[cite: 342]."
+        },
+        {
+            id: 5,
+            question: "Which pharmacological classes are utilized in the medical management of BPH? (Select all that apply)[cite: 342]",
+            type: "checkbox",
+            options: [
+                "Alpha-adrenergic receptor blockers (e.g., Flomax)[cite: 342]",
+                "5-alpha-reductase inhibitors (e.g., Finasteride / Proscar)[cite: 342]",
+                "Potassium-sparing loop diuretics",
+                "Intravenous hypertonic saline"
+            ],
+            answer: [0, 1],
+            rationale: "Alpha-blockers like Flomax promote bladder/prostate relaxation, and 5-alpha-reductase inhibitors like Finasteride prevent conversion/shrink the prostate[cite: 342]."
+        },
+        {
+            id: 6,
+            question: "When performing diagnostic evaluations on a patient with suspected prostate issues, why must a Digital Rectal Examination (DRE) be performed **after** a Prostate-Specific Antigen (PSA) blood test if both are done, or why is order important?[cite: 344]",
+            options: [
+                "Because manipulating the prostate during a DRE can falsely elevate PSA levels[cite: 344]",
+                "Because DRE destroys all blood cells instantly",
+                "Because PSA must be drawn while the patient is sleeping",
+                "There is no clinical relationship between DRE and PSA"
+            ],
+            answer: 0,
+            rationale: "If a patient is suspected of having something other than BPH, a DRE should be done after or carefully considered because physical manipulation during a DRE can falsely elevate PSA levels[cite: 344]."
+        },
+        {
+            id: 7,
+            question: "What is considered a normal reference range for PSA in men aged 60 or older?",
+            options: [
+                "Less than 4[cite: 344]",
+                "Less than 1[cite: 344]",
+                "Between 15 and 20",
+                "Greater than 50"
+            ],
+            answer: 0,
+            rationale: "For men aged 60 or older, PSA should ideally be less than 4 (while for younger adults it should be less than 1, and age 59 or younger less than 2.5)[cite: 344]."
+        },
+        {
+            id: 8,
+            question: "Following a Transurethral Resection of the Prostate (TURP), what is the primary purpose of maintaining Continuous Bladder Irrigation (CBI)?[cite: 345]",
+            options: [
+                "To prevent blood clot obstruction and monitor for bleeding[cite: 345]",
+                "To deliver systemic chemotherapy directly to the liver",
+                "To keep the patient's core body temperature elevated",
+                "To flush out excess oral sodium"
+            ],
+            answer: 0,
+            rationale: "CBI is maintained post-TURP to prevent catheter obstruction from blood clots and to monitor for hemorrhage[cite: 345]."
+        },
+        {
+            id: 9,
+            question: "A nurse is monitoring a client receiving Continuous Bladder Irrigation (CBI) following a TURP. The patient becomes confused, restless, and experiences nausea and seizures. What post-operative complication should the nurse suspect?[cite: 345]",
+            options: [
+                "TURP Syndrome (hyponatremia / water intoxication from absorption of irrigation fluid)[cite: 345]",
+                "Diabetic ketoacidosis",
+                "Hypercalcemic crisis",
+                "Acute pulmonary tuberculosis"
+            ],
+            answer: 0,
+            rationale: "TURP syndrome results from absorption of bladder irrigation fluid, leading to severe hyponatremia characterized by confusion, altered mental status, and seizures[cite: 345]."
+        },
+        {
+            id: 10,
+            question: "What color should urine typically appear within the first 24 hours following a TURP procedure?[cite: 345]",
+            options: [
+                "Pinkish or light red[cite: 345]",
+                "Bright neon green",
+                "Dark amber with thick sediment",
+                "Completely black"
+            ],
+            answer: 0,
+            rationale: "During the first 24 hours post-TURP, urine should appear pinkish or light red[cite: 345]. Bright red or burgundy urine indicates active hemorrhage requiring immediate notification of the provider[cite: 345]."
+        },
+        {
+            id: 11,
+            question: "What is a common expected ejaculation outcome following a Transurethral Resection of the Prostate (TURP)?[cite: 343]",
+            options: [
+                "Retrograde ejaculation (sperm goes back into the bladder and comes out during urination)[cite: 343]",
+                "Hyperactive permanent sperm motility",
+                "Complete permanent sterilization with zero urine output",
+                "Total cessation of all kidney function"
+            ],
+            answer: 0,
+            rationale: "TURP frequently results in retrograde ejaculation, where semen travels backward into the bladder rather than out through the urethra[cite: 343]."
+        },
+        {
+            id: 12,
+            question: "Which lifestyle and dietary recommendations should be given to patients to promote urologic health and minimize prostate/bladder irritation? (Select all that apply)[cite: 346]",
+            type: "checkbox",
+            options: [
+                "Avoid bladder irritants such as caffeine, alcohol, soda, and peppermints[cite: 346]",
+                "Minimize urinary stasis by developing a regular voiding schedule[cite: 346]",
+                "Avoid common cough and cold remedies containing decongestants that cause bladder irritation[cite: 346]",
+                "Consume massive quantities of concentrated alcohol daily"
+            ],
+            answer: [0, 1, 2],
+            rationale: "Avoiding bladder irritants (caffeine, alcohol, soda, peppermints), minimizing stasis via voiding schedules, and avoiding decongestant cough/cold remedies are key health promotion guidelines[cite: 346]."
+        },
+        {
+            id: 13,
+            question: "What physical finding during a Digital Rectal Examination (DRE) strongly raises suspicion for prostate cancer rather than simple BPH?[cite: 344, 346]",
+            options: [
+                "A hard, nodular, and asymmetric prostate gland[cite: 346]",
+                "A smooth, symmetric, rubbery, and small gland[cite: 343]",
+                "A completely absent prostate gland",
+                "A soft, spongy, fluid-filled cyst"
+            ],
+            answer: 0,
+            rationale: "A prostate gland that feels hard, nodular, and asymmetric upon DRE is a strong indicator of prostate cancer[cite: 346] (whereas a normal/BPH gland feels smooth, symmetric, rubbery, and small[cite: 343])."
+        },
+        {
+            id: 14,
+            question: "In advanced stages of prostate cancer, where does the tumor frequently metastasize, leading to severe lumbosacral pain radiating to the hips or thighs?[cite: 347]",
+            options: [
+                "To the bones (bone metastasis)[cite: 347]",
+                "To the brain stem exclusively",
+                "To the heart valves",
+                "To the fingernails"
+            ],
+            answer: 0,
+            rationale: "Advanced prostate cancer frequently metastasizes to the bones, causing lumbosacral pain, hip/thigh radiation, and potential spinal cord compression[cite: 347, 348]."
+        },
+        {
+            id: 15,
+            question: "According to American Cancer Society (ACS) guidelines, at what age should asymptomatic men with average risk begin prostate cancer screening?[cite: 347]",
+            options: [
+                "50 years old[cite: 347]",
+                "20 years old",
+                "75 years old",
+                "100 years old"
+            ],
+            answer: 0,
+            rationale: "Asymptomatic men should begin screening at age 50 (or ages 40-45 for high-risk individuals with family history)[cite: 347]."
+        },
+        {
+            id: 16,
+            question: "What patient education is essential for a client undergoing **Brachytherapy** (internal radiation therapy) for prostate cancer?[cite: 348]",
+            options: [
+                "Avoid close contact with babies, pregnant women, and older adults for about a week[cite: 348]",
+                "Lick the radiation seeds to activate them",
+                "Never drink water again",
+                "Remove the radioactive seeds yourself daily"
+            ],
+            answer: 0,
+            rationale: "Brachytherapy places radioactive seeds into the prostate; patients must avoid close contact with infants, pregnant women, and older adults for approximately one week[cite: 348]."
+        },
+        {
+            id: 17,
+            question: "What is the primary purpose of Hormonal Therapy (Androgen Deprivation Therapy) in prostate cancer management?[cite: 348]",
+            options: [
+                "To lower DHT levels and shrink the prostate tumor[cite: 348]",
+                "To increase testosterone production to maximum levels",
+                "To stimulate hair growth on the scalp",
+                "To cure acute urinary tract infections instantly"
+            ],
+            answer: 0,
+            rationale: "Androgen deprivation therapy (using agents like Finasteride) lowers DHT levels and shrinks the prostate tumor[cite: 348]."
+        },
+        {
+            id: 18,
+            question: "What post-operative instruction is critical for a patient recovering from open prostate surgery to prevent the rupture of surgical sutures?[cite: 349]",
+            options: [
+                "Prevent constipation and avoid heavy lifting, using stool softeners like Colace[cite: 349]",
+                "Perform heavy weightlifting immediately to build core strength",
+                "Strain heavily during bowel movements",
+                "Eat zero fiber for 6 months"
+            ],
+            answer: 0,
+            rationale: "Avoiding heavy lifting and preventing straining/constipation (using stool softeners like Colace) is crucial post-prostate surgery to prevent suture rupture[cite: 349]."
+        },
+        {
+            id: 19,
+            question: "Which dietary and lifestyle recommendations are promoted for prostate cancer health prevention? (Select all that apply)[cite: 349]",
+            type: "checkbox",
+            options: [
+                "Eating fruits, vegetables, and whole grains[cite: 349]",
+                "Consuming foods containing lycopene, such as tomatoes[cite: 349]",
+                "Stopping smoking and limiting alcohol consumption[cite: 349]",
+                "Maintaining a healthy weight and exercising regularly[cite: 349]",
+                "Eating massive quantities of charred red and processed meats daily"
+            ],
+            answer: [0, 1, 2, 3],
+            rationale: "A healthy lifestyle including fruits/veg, whole grains, lycopene-rich tomatoes, regular exercise, healthy weight, smoking cessation, and limited alcohol promotes health[cite: 349] (red/processed meats are risk factors[cite: 346])."
+        },
+        {
+            id: 20,
+            question: "Most urinary tract infections (UTIs) result from which category of contaminating organisms?[cite: 349]",
+            options: [
+                "Fecal organisms (such as E. coli)[cite: 349, 350]",
+                "Airborne fungal spores",
+                "Skin surface parasites",
+                "Respiratory viruses"
+            ],
+            answer: 0,
+            rationale: "Most UTIs result from fecal organisms gaining access to the urinary tract[cite: 349] (with E. coli being the most common cause[cite: 350])."
+        },
+        {
+            id: 21,
+            question: "What is the clinical difference between a **complicated** and an **uncomplicated** UTI?[cite: 349]",
+            options: [
+                "Complicated UTIs are nosocomial (acquired in the hospital, often related to catheterization), whereas uncomplicated are community-acquired[cite: 349].",
+                "Complicated UTIs only occur in pregnant women.",
+                "Uncomplicated UTIs always progress to septic shock within 1 hour.",
+                "There is no clinical difference."
+            ],
+            answer: 0,
+            rationale: "Uncomplicated UTIs are community-acquired (occurring in healthy women/pregnant patients), while complicated UTIs are nosocomial and catheter-related[cite: 349]."
+        },
+        {
+            id: 22,
+            question: "What clinical manifestations are characteristic of **Pyelonephritis** (upper urinary tract infection affecting the renal parenchyma and pelvis)? (Select all that apply)[cite: 350]",
+            type: "checkbox",
+            options: [
+                "Costovertebral angle (CVA) / flank pain[cite: 350]",
+                "Fever and chills[cite: 350]",
+                "Elevated white blood cells (leukocytosis)[cite: 350]",
+                "Tachycardia and tachypnea if septic[cite: 350]",
+                "Total absence of any urinary symptoms"
+            ],
+            answer: [0, 1, 2, 3],
+            rationale: "Pyelonephritis presents systemically with CVA flank pain, fever/chills, leukocytosis, vomiting, headache, tachycardia, and tachypnea[cite: 350]."
+        },
+        {
+            id: 23,
+            question: "What is the primary indicator of a UTI in older adult clients, which frequently differs from younger populations?[cite: 351, 352]",
+            options: [
+                "Acute confusion or altered mental status (and low-grade fever)[cite: 351, 352]",
+                "Extreme euphoria and hyperactivity",
+                "Sudden hair growth",
+                "Complete loss of hearing"
+            ],
+            answer: 0,
+            rationale: "In older adults, acute confusion or a low-grade fever is often the very first and primary indicator of a UTI or dehydration[cite: 351, 352]."
+        },
+        {
+            id: 24,
+            question: "Which antibiotic is noted in the text for potentially causing photosensitivity, requiring patient education and a test dose to assess for allergic rash or anaphylaxis?[cite: 351]",
+            options: [
+                "Bactrim (trimethoprim-sulfamethoxazole)[cite: 351]",
+                "Normal sterile water",
+                "Morphine sulfate",
+                "Regular human insulin"
+            ],
+            answer: 0,
+            rationale: "Bactrim can cause photosensitivity and allergic reactions, requiring skin test doses and allergy assessments[cite: 351]."
+        },
+        {
+            id: 25,
+            question: "What urinary analgesic is commonly prescribed in combination with antibiotics for UTIs, and what distinct side effect does it cause?[cite: 351]",
+            options: [
+                "Phenazopyridine (Pyridium); turns urine an orange color[cite: 351]",
+                "Acetaminophen; turns urine neon purple",
+                "Ibuprofen; turns urine jet black",
+                "Furosemide; turns urine crystal clear"
+            ],
+            answer: 0,
+            rationale: "Phenazopyridine (Pyridium) is a urinary analgesic that relieves discomfort and turns the client's urine orange[cite: 351]."
+        },
+        {
+            id: 26,
+            question: "What is the recommended daily fluid intake for patients with uncomplicated pyelonephritis or UTIs (unless contraindicated)?[cite: 350, 351]",
+            options: [
+                "3 to 4 liters of fluid per day[cite: 350, 351]",
+                "Strictly under 200 mL per day",
+                "10 gallons of saltwater daily",
+                "Zero oral fluids"
+            ],
+            answer: 0,
+            rationale: "Patients are encouraged to drink 3 to 4 liters of fluid per day to flush out bacteria (unless contraindicated)[cite: 350, 351]."
+        },
+        {
+            id: 27,
+            question: "Which nursing guideline is critical regarding indwelling urinary catheters to prevent nosocomial infections?[cite: 351]",
+            options: [
+                "Maintain a closed catheter drainage system; catheters must not be disconnected from the drainage bag[cite: 351]",
+                "Disconnect the tubing every 2 hours to let the urine drain on the floor",
+                "Tie knots in the catheter tubing to restrict flow",
+                "Change the catheter bag every 5 minutes"
+            ],
+            answer: 0,
+            rationale: "Maintaining a strictly closed catheter drainage system without disconnecting the tubing from the bag is essential to prevent bacterial entry[cite: 351]."
+        },
+        {
+            id: 28,
+            question: "What is **Urosepsis**?[cite: 352]",
+            options: [
+                "A severe systemic infection originating from the urinary tract that progresses into systemic infection and septic shock[cite: 352]",
+                "A mild localized skin rash on the forearm",
+                "A normal variation of urine color after eating carrots",
+                "An infection of the ear canal"
+            ],
+            answer: 0,
+            rationale: "Urosepsis is a severe systemic infection originating in the urinary tract that can progress to septic shock[cite: 352]."
+        },
+        {
+            id: 29,
+            question: "What are key risk factors for developing urinary tract infections? (Select all that apply)[cite: 352]",
+            type: "checkbox",
+            options: [
+                "Being female (shorter urethra)[cite: 352]",
+                "Pregnancy (shorter urethra and stasis)[cite: 352]",
+                "Diabetes mellitus (due to glycosuria)[cite: 352]",
+                "Poor hygiene / wiping back to front[cite: 352]",
+                "Permanent immunity to all bacteria"
+            ],
+            answer: [0, 1, 2, 3],
+            rationale: "Female anatomy, pregnancy, diabetes (glycosuria), poor hygiene, structural impairments, and catheterization are major UTI risk factors[cite: 352]."
+        },
+        {
+            id: 30,
+            question: "What is the highest priority nursing diagnostic action when a patient is suspected of having a urinary tract infection?[cite: 352]",
+            options: [
+                "Obtaining a urine culture and sensitivity test[cite: 352]",
+                "Performing an immediate brain biopsy",
+                "Administering a dose of chemotherapy",
+                "Weighing the patient's clothing"
+            ],
+            answer: 0,
+            rationale: "Obtaining a urine culture and sensitivity test is a high nursing priority to identify the exact organism and guide targeted antibiotic therapy[cite: 352]."
+        },
+        {
+            id: 31,
+            question: "What is the most common urologic malignancy / tumor of the bladder?[cite: 353]",
+            options: [
+                "Bladder cancer (papillomatous cauliflower-like growths)[cite: 353]",
+                "Benign renal tubular adenoma",
+                "Prostatic calcification",
+                "Ureteral stricture"
+            ],
+            answer: 0,
+            rationale: "Bladder cancer features tumors that originate in bladder tissues as papillomatous, cauliflower-like growths and is the most common urologic malignancy[cite: 353]."
+        },
+        {
+            id: 32,
+            question: "What is the classic, most common initial manifestation of bladder cancer?[cite: 353]",
+            options: [
+                "Painless gross hematuria[cite: 353]",
+                "Severe explosive diarrhea",
+                "Total absence of urine output",
+                "Uncontrollable sneezing"
+            ],
+            answer: 0,
+            rationale: "Painless gross hematuria (painless blood in the urine) is the classic initial sign of bladder cancer[cite: 353]."
+        },
+        {
+            id: 33,
+            question: "What immunotherapy agent is commonly instilled directly into the bladder for bladder cancer treatment, and how long must the patient hold it before voiding?[cite: 353]",
+            options: [
+                "Bacillus Calmette-Guérin (BCG); must be held in the bladder for 2 hours[cite: 353]",
+                "Regular insulin; must be held for 5 minutes",
+                "Normal saline; must be held for 48 hours",
+                "Liquid potassium chloride; held for 10 seconds"
+            ],
+            answer: 0,
+            rationale: "BCG immunotherapy is instilled into the bladder and must be held for exactly 2 hours before voiding; voiding too early renders it ineffective and increases infection risks[cite: 353]."
+        },
+        {
+            id: 34,
+            question: "What are the primary risk factors associated with the development of bladder cancer? (Select all that apply)[cite: 354]",
+            type: "checkbox",
+            options: [
+                "Tobacco smoking[cite: 354]",
+                "Occupational exposures (dyes, rubbers, chemicals, paint)[cite: 354]",
+                "Chronic bladder irritation / long-term indwelling catheters[cite: 354]",
+                "Age > 60 years[cite: 354]",
+                "Eating a diet exclusively rich in pure spring water"
+            ],
+            answer: [0, 1, 2, 3],
+            rationale: "Tobacco, occupational chemical/dye exposure, chronic irritation/indwelling catheters, age > 60, family history, and pelvic radiation are major bladder cancer risk factors[cite: 354]."
+        },
+        {
+            id: 35,
+            question: "When performing a radical cystectomy for bladder cancer in female patients, which organs are typically removed alongside the bladder?[cite: 353]",
+            options: [
+                "Cervix, uterus, fallopian tubes, and ovaries[cite: 353]",
+                "Both kidneys and the entire liver",
+                "The stomach and spleen",
+                "The appendix exclusively"
+            ],
+            answer: 0,
+            rationale: "In female radical cystectomy, the bladder, cervix, uterus, fallopian tubes, and ovaries are removed[cite: 353]."
+        },
+        {
+            id: 36,
+            question: "What surgical intervention involves burning away bladder tumors using a resectoscope (Transurethral Resection of Bladder Tumor)?[cite: 353]",
+            options: [
+                "TURBT or fulguration (cauterization)[cite: 353]",
+                "Nephrolithotomy",
+                "Appendectomy",
+                "Orchiectomy"
+            ],
+            answer: 0,
+            rationale: "TURBT (Transurethral Resection of Bladder Tumor) or fulguration involves burning away bladder tumors endoscopically[cite: 353]."
+        },
+        {
+            id: 37,
+            question: "What imaging precaution must be taken when performing a CT urogram with contrast media for a patient with suspected urologic tumors?[cite: 354, 355]",
+            options: [
+                "Ask if they are allergic to shellfish or iodine and check if they are taking Metformin[cite: 327, 355]",
+                "Ensure they have consumed 5 gallons of milk",
+                "Check if they have a history of peanut allergies",
+                "Verify their blood type is O-negative"
+            ],
+            answer: 0,
+            rationale: "Contrast media is iodine-based; the nurse must check for shellfish/iodine allergies and review whether the patient is taking Metformin[cite: 327, 355]."
+        },
+        {
+            id: 38,
+            question: "In the TNM staging system for cancer grading, what does each letter represent?[cite: 355]",
+            options: [
+                "T = Extent of Tumor; N = Nodes; M = Metastasis[cite: 355]",
+                "T = Temperature; N = Nitrogen; M = Moisture",
+                "T = Total count; N = Neutrophils; M = Medication",
+                "T = Time; N = Necrosis; M = Malignancy"
+            ],
+            answer: 0,
+            rationale: "In TNM staging, T represents the extent of the tumor, N represents lymph nodes involved, and M represents the presence of metastasis[cite: 355]."
+        },
+        {
+            id: 39,
+            question: "If cancer metastasizes to the lumbosacral area, what neurological complication can occur in both prostate and bladder cancer patients?[cite: 348, 354]",
+            options: [
+                "Spinal cord compression leading to weakness of the lower extremities[cite: 348, 354]",
+                "Total blindness in both eyes",
+                "Paralysis of the facial muscles",
+                "Enhanced deep tendon reflexes throughout the arms"
+            ],
+            answer: 0,
+            rationale: "Metastasis to the lumbosacral area can cause spinal cord compression, resulting in lower extremity weakness and neurological deficits[cite: 348, 354]."
+        },
+        {
+            id: 40,
+            question: "What is the primary function of the kidneys regarding red blood cells and metabolic waste?[cite: 303, 304, 350]",
+            options: [
+                "Filtering blood[cite: 350], excreting waste, and regulating fluid/electrolyte and acid-base balance",
+                "Producing insulin and glucagon exclusively",
+                "Pumping blood directly to the lungs",
+                "Storing bile for digestion"
+            ],
+            answer: 0,
+            rationale: "The kidneys filter blood[cite: 350], regulate fluid, electrolyte, and acid-base balance, and excrete waste products."
+        },
+        {
+            id: 41,
+            question: "What is a normal laboratory reference range for serum creatinine?[cite: 303]",
+            options: [
+                "0.8 - 1.3 mg/dL[cite: 303]",
+                "3.5 - 5.0 mg/dL",
+                "135 - 145 mg/dL",
+                "9.0 - 10.5 mg/dL"
+            ],
+            answer: 0,
+            rationale: "The normal serum creatinine reference range is 0.8 - 1.3 mg/dL[cite: 303]."
+        },
+        {
+            id: 42,
+            question: "What is a normal laboratory reference range for Blood Urea Nitrogen (BUN)?[cite: 304]",
+            options: [
+                "6 - 20 mg/dL[cite: 304]",
+                "50 - 100 mg/dL",
+                "1 - 3 mg/dL",
+                "135 - 145 mg/dL"
+            ],
+            answer: 0,
+            rationale: "The normal BUN reference range is 6 - 20 mg/dL[cite: 304]."
+        },
+        {
+            id: 43,
+            question: "What is hydronephrosis?[cite: 342, 347]",
+            options: [
+                "Distention / swelling of the renal pelvis and kidneys due to a backup of fluid / urinary obstruction[cite: 342, 347]",
+                "Shrinkage of the kidneys from dehydration",
+                "Infection of the prostate gland capsule",
+                "Total calcification of the bladder wall"
+            ],
+            answer: 0,
+            rationale: "Hydronephrosis is the distention and backup of urine into the kidneys resulting from urinary obstruction (such as BPH or tumors)[cite: 342, 347]."
+        },
+        {
+            id: 44,
+            question: "What is cystitis?[cite: 49]",
+            options: [
+                "Inflammation / bacterial infection of the bladder (lower urinary tract)[cite: 49]",
+                "Infection of the cerebral cortex",
+                "Inflammation of the gallbladder",
+                "Fracture of the pelvic bone"
+            ],
+            answer: 0,
+            rationale: "Cystitis is an infection or inflammation of the bladder in the lower urinary tract[cite: 49]."
+        },
+        {
+            id: 45,
+            question: "What is pyelitis or pyelonephritis?[cite: 50]",
+            options: [
+                "A bacterial infection of the kidney parenchyma and renal pelvis[cite: 50]",
+                "A benign growth on the prostate",
+                "An infection restricted solely to the distal urethra",
+                "A muscle strain in the lower back"
+            ],
+            answer: 0,
+            rationale: "Pyelonephritis is a bacterial infection of the kidney and renal pelvis (upper urinary tract)[cite: 50]."
+        },
+        {
+            id: 46,
+            question: "Why are women anatomically more susceptible to urinary tract infections than men?[cite: 49, 52]",
+            options: [
+                "Because women have a much shorter urethra[cite: 52], allowing bacteria easier access to the bladder[cite: 49]",
+                "Because women lack kidneys",
+                "Because female bladders are outside the body",
+                "Because women do not produce white blood cells"
+            ],
+            answer: 0,
+            rationale: "Women have a shorter urethra compared to men, which makes it easier for bacteria to ascend into the bladder[cite: 49, 52]."
+        },
+        {
+            id: 47,
+            question: "What is prostatitis?[cite: 50]",
+            options: [
+                "Inflammation or infection of the prostate gland that presents with symptoms similar to a lower UTI[cite: 50]",
+                "A malignant tumor of the pancreas",
+                "Complete absence of prostate tissue",
+                "A viral infection of the skin"
+            ],
+            answer: 0,
+            rationale: "Prostatitis is inflammation of the prostate; while not technically a UTI, it presents with identical lower UTI symptoms and requires prostate assessment in males[cite: 50]."
+        },
+        {
+            id: 48,
+            question: "What is the function of Urodynamic studies in urologic assessment?[cite: 345]",
+            options: [
+                "To assess the patient's ability to hold fluid and test whether the urinary sphincter is functioning properly[cite: 345]",
+                "To measure blood glucose levels over 3 months",
+                "To check for bone fractures in the spine",
+                "To count red blood cells in urine"
+            ],
+            answer: 0,
+            rationale: "Urodynamic studies involve injecting fluid into the bladder to assess elasticity and determine if the urinary sphincter is functioning[cite: 345]."
+        },
+        {
+            id: 49,
+            question: "What is hematuria?[cite: 347, 353]",
+            options: [
+                "The presence of blood in the urine[cite: 347, 353]",
+                "The presence of sugar in the urine",
+                "Excess protein production by the liver",
+                "Complete absence of urine formation"
+            ],
+            answer: 0,
+            rationale: "Hematuria refers to blood present in the urine, which can be microscopic or gross (visible)[cite: 347, 353]."
+        },
+        {
+            id: 50,
+            question: "What is a Transurethral Incision of the Prostate (TUIP)?[cite: 343]",
+            options: [
+                "A surgical procedure using a tiny blade to make small incisions in the prostate gland to relieve tension and relax the urethral opening[cite: 343]",
+                "The complete removal of both kidneys",
+                "An open abdominal incision above the umbilicus",
+                "A non-invasive ultrasound applied to the skin"
+            ],
+            answer: 0,
+            rationale: "TUIP uses a tiny blade to make small incisions in the prostate gland, relieving tension and making it more relaxed and stretched to improve urine flow[cite: 343]."
+        }
+    ];
+
+    let userAnswers = {};
+    let score = 0;
+
+    function initQuiz() {
+        const container = document.getElementById('quiz-container');
+        document.getElementById('total-count').textContent = quizData.length;
+
+        quizData.forEach((q, index) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+
+            let optionsHtml = '';
+            q.options.forEach((opt, optIndex) => {
+                const inputType = q.type === 'checkbox' ? 'checkbox' : 'radio';
+                optionsHtml += `
+                    <label class="option-item" id="opt-${index}-${optIndex}">
+                        <input type="${inputType}" name="q-${index}" value="${optIndex}">
+                        <span>${opt}</span>
+                    </label>
+                `;
+            });
+
+            card.innerHTML = `
+                <div class="question-title">Question ${index + 1}: ${q.question}</div>
+                <div class="options-list">${optionsHtml}</div>
+                <button class="btn" onclick="checkAnswer(${index})">Submit Answer</button>
+                <div class="rationale" id="rationale-${index}"><strong>Rationale:</strong> ${q.rationale}</div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function checkAnswer(index) {
+        const q = quizData[index];
+        const inputs = document.querySelectorAll(`input[name="q-${index}"]`);
+        
+        let selected = [];
+        inputs.forEach((input, optIdx) => {
+            if (input.checked) selected.push(optIdx);
+        });
+
+        if (selected.length === 0) {
+            alert('Please select an option first.');
+            return;
+        }
+
+        let isCorrect = false;
+        if (q.type === 'checkbox') {
+            const sortedSelected = [...selected].sort();
+            const sortedAnswer = [...q.answer].sort();
+            isCorrect = JSON.stringify(sortedSelected) === JSON.stringify(sortedAnswer);
+        } else {
+            isCorrect = selected[0] === q.answer;
+        }
+
+        // Highlight options
+        inputs.forEach((input, optIdx) => {
+            const label = document.getElementById(`opt-${index}-${optIdx}`);
+            if (q.type === 'checkbox') {
+                if (q.answer.includes(optIdx)) {
+                    label.classList.add('correct');
+                } else if (input.checked) {
+                    label.classList.add('incorrect');
+                }
+            } else {
+                if (optIdx === q.answer) {
+                    label.classList.add('correct');
+                } else if (input.checked) {
+                    label.classList.add('incorrect');
+                }
+            }
+            input.disabled = true;
+        });
+
+        // Show rationale
+        document.getElementById(`rationale-${index}`).classList.add('visible');
+        
+        // Track score if first time answering
+        if (!userAnswers[index]) {
+            userAnswers[index] = true;
+            document.getElementById('answered-count').textContent = Object.keys(userAnswers).length;
+            if (isCorrect) {
+                score++;
+                document.getElementById('score-count').textContent = score;
+            }
+        }
+    }
+
+    window.onload = initQuiz;
+</script>
+
+</body>
+</html>
