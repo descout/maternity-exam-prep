@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diabetes Mellitus: Comprehensive Mastery Exam</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --success: #16a34a;
+            --error: #dc2626;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text: #1e293b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: var(--surface);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0 0 8px 0;
+            color: var(--primary-dark);
+            font-size: 1.8rem;
+        }
+
+        p.subtitle {
+            margin: 0;
+            color: #64748b;
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: space-around;
+            background: var(--primary);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 16px;
+            font-weight: bold;
+        }
+
+        .question-card {
+            background: var(--surface);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgb(0 0 0 / 0.05);
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .question-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+        }
+
+        .options-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0 0 16px 0;
+        }
+
+        .option-item {
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .option-item:hover {
+            background-color: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .option-item.selected {
+            border-color: var(--primary);
+            background-color: #eff6ff;
+        }
+
+        .option-item.correct {
+            background-color: #dcfce7 !important;
+            border-color: var(--success) !important;
+            color: #166534;
+        }
+
+        .option-item.incorrect {
+            background-color: #fee2e2 !important;
+            border-color: var(--error) !important;
+            color: #991b1b;
+        }
+
+        input[type="radio"], input[type="checkbox"] {
+            accent-color: var(--primary);
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .rationale {
+            margin-top: 12px;
+            padding: 12px;
+            background-color: #f8fafc;
+            border-left: 4px solid var(--primary);
+            border-radius: 4px;
+            font-size: 0.95rem;
+            display: none;
+        }
+
+        .rationale.visible {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Diabetes Mellitus Mastery Exam</h1>
+        <p class="subtitle">50-Question Interactive Practice Exam</p>
+        <div class="score-board">
+            <div>Answered: <span id="answered-count">0</span> / <span id="total-count">0</span></div>
+            <div>Score: <span id="score-count">0</span></div>
+        </div>
+    </header>
+
+    <div id="quiz-container"></div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            id: 1,
+            question: "Which cells in the islets of Langerhans of the pancreas are responsible for producing insulin?",
+            options: [
+                "Alpha cells",
+                "Beta cells",
+                "Delta cells",
+                "Gamma cells"
+            ],
+            answer: 1,
+            rationale: "Insulin is produced by the beta cells in the islets of Langerhans, while glucagon is secreted by alpha cells."
+        },
+        {
+            id: 2,
+            question: "What are the core components that define Metabolic Syndrome, which significantly increases a patient's risk for developing Type 2 diabetes? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Abdominal obesity / large waist size",
+                "High blood pressure (hypertension)",
+                "Elevated fasting glucose",
+                "Abnormal cholesterol (decreased HDL, high triglycerides)",
+                "Severe chronic hyponatremia"
+            ],
+            answer: [0, 1, 2, 3],
+            rationale: "Metabolic syndrome consists of abdominal obesity, high blood pressure, high glucose, and abnormal cholesterol profiles (low HDL, high triglycerides)."
+        },
+        {
+            id: 3,
+            question: "A client is diagnosed with LADA (Latent Autoimmune Diabetes of Adults), often referred to as Type 1.5 diabetes. At what typical age does this condition usually present?",
+            options: [
+                "Around 5 years old",
+                "Around 15 years old",
+                "Around 30 years old",
+                "Around 70 years old"
+            ],
+            answer: 2,
+            rationale: "LADA (Type 1.5 diabetes) typically happens when a patient is around 30 years old, presenting similarly to Type 1 diabetes."
+        },
+        {
+            id: 4,
+            question: "Which of the following diagnostic lab results meet the criteria for a definitive diagnosis of diabetes mellitus? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Glycosylated hemoglobin (A1C) level of 7% or higher",
+                "Fasting plasma glucose (FPG) greater than 126 mg/dL (confirmed across tests)",
+                "Random plasma glucose greater than 200 mg/dL with classic hyperglycemia symptoms",
+                "2-hour post-load glucose level equal to or greater than 200 mg/dL",
+                "Serum fasting glucose consistently under 70 mg/dL"
+            ],
+            answer: [0, 1, 2, 3],
+            rationale: "Diagnostic criteria include an A1C ≥ 7%, fasting plasma glucose > 126 mg/dL, random glucose > 200 mg/dL with symptoms, and 2-hour post-load glucose ≥ 200 mg/dL."
+        },
+        {
+            id: 5,
+            question: "A client with Type 2 diabetes is taking Metformin (Glucophage). Which condition represents a strict contraindication for this medication due to the risk of lactic acidosis?",
+            options: [
+                "Mild essential hypertension",
+                "Renal impairment / failure",
+                "Seasonal allergic rhinitis",
+                "History of mild osteoarthritis"
+            ],
+            answer: 1,
+            rationale: "Metformin is contraindicated in patients with renal impairment because impaired kidneys cannot properly excrete the medication, increasing the risk of lactic acidosis."
+        },
+        {
+            id: 6,
+            question: "How many days prior to a diagnostic procedure utilizing intravenous iodinated contrast dye must Metformin be discontinued?",
+            options: [
+                "At least 6 hours before",
+                "At least 24 hours before",
+                "At least 2 days (48 hours) before",
+                "It does not need to be stopped"
+            ],
+            answer: 2,
+            rationale: "Metformin must be discontinued at least 2 days (48 hours) before diagnostic testing involving contrast dye to avoid renal complications and lactic acidosis."
+        },
+        {
+            id: 7,
+            question: "Which class of oral non-insulin medications works primarily by stimulating the beta cells of the pancreas to produce more insulin, carrying hypoglycemia as its most common side effect?",
+            options: [
+                "Biguanides (Metformin)",
+                "Sulfonylueas (e.g., Glipizide, Glyburide)",
+                "ACE inhibitors",
+                "Calcium channel blockers"
+            ],
+            answer: 1,
+            rationale: "Sulfonylureas stimulate beta cells to produce insulin, with hypoglycemia being the most common side effect."
+        },
+        {
+            id: 8,
+            question: "Which rapid-acting insulins can be administered approximately 15 minutes before a meal? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Lispro (Humalog)",
+                "Aspart (Novolog)",
+                "Insulin glulisine",
+                "Regular insulin (Novolog R)",
+                "NPH insulin"
+            ],
+            answer: [0, 1, 2],
+            rationale: "Rapid-acting insulins include lispro, aspart, and glulisine, which are typically given about 15 minutes before eating. Regular insulin is short-acting (given 30 mins before), and NPH is intermediate."
+        },
+        {
+            id: 9,
+            question: "Which insulin preparations should **never** be administered via an insulin pump? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Regular insulin (Short-acting)",
+                "NPH insulin (Intermediate-acting)",
+                "Glargine / Long-acting insulins",
+                "Rapid-acting insulin analogs (Lispro/Aspart)"
+            ],
+            answer: [1, 2],
+            rationale: "Intermediate-acting (NPH) and long-acting (Glargine/detemir) insulins should never be used in an insulin pump, which is designed exclusively for continuous rapid-acting insulin infusions."
+        },
+        {
+            id: 10,
+            question: "What is the preferred anatomical injection site for subcutaneous insulin administration due to its most consistent and rapid absorption rate?",
+            options: [
+                "The outer thigh",
+                "The abdomen",
+                "The back of the upper arm",
+                "The gluteal muscle"
+            ],
+            answer: 1,
+            rationale: "The abdomen is considered the best and most rapidly absorbed injection site for subcutaneous insulin."
+        },
+        {
+            id: 11,
+            question: "A client experiences a normal or elevated blood glucose level at bedtime, followed by nocturnal hypoglycemia around 2:00 AM to 3:00 AM, which then triggers a rebound hyperglycemia in the morning due to counter-regulatory hormones. What is this phenomenon called?",
+            options: [
+                "The Dawn Phenomenon",
+                "The Somogyi Effect",
+                "Insulin Resistance Syndrome",
+                "Tumor Lysis Syndrome"
+            ],
+            answer: 1,
+            rationale: "The Somogyi effect involves nocturnal hypoglycemia (around 2-3 AM) followed by rebound morning hyperglycemia driven by counter-regulatory hormones."
+        },
+        {
+            id: 12,
+            question: "A child with Type 1 diabetes has normal blood glucose levels until approximately 3:00 AM, at which point levels begin to rise due to natural night surges of growth hormone, resulting in morning hyperglycemia. What is this phenomenon called?",
+            options: [
+                "The Somogyi Effect",
+                "The Dawn Phenomenon",
+                "Gestational Hyperglycemia",
+                "Hypoglycemia Unawareness"
+            ],
+            answer: 1,
+            rationale: "The Dawn Phenomenon features normal blood glucose until around 3:00 AM, after which it rises due to night surges of growth hormone."
+        },
+        {
+            id: 13,
+            question: "What constitutes the threshold blood glucose level for diagnosing hypoglycemia, requiring immediate intervention?",
+            options: [
+                "Less than 70 mg/dL",
+                "Less than 100 mg/dL",
+                "Less than 126 mg/dL",
+                "Less than 200 mg/dL"
+            ],
+            answer: 0,
+            rationale: "Hypoglycemia is defined as a blood glucose level below 70 mg/dL."
+        },
+        {
+            id: 14,
+            question: "Which clinical manifestations are classic signs of sympathetic nervous system activation (epinephrine surge) during acute hypoglycemia? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Diaphoresis (sweating)",
+                "Shakiness / tremors",
+                "Tachycardia and palpitations",
+                "Anxiety",
+                "Profound coma from the start"
+            ],
+            answer: [0, 1, 2, 3],
+            rationale: "Sympathetic activation triggers epinephrine surges resulting in diaphoresis, shakiness, tachycardia, palpitations, and anxiety. Coma is a late CNS sign."
+        },
+        {
+            id: 15,
+            question: "A client with hypoglycemia is conscious and alert. According to the Rule of 15, how many grams of simple carbohydrates should be administered, and when should blood glucose be rechecked?",
+            options: [
+                "5 grams; recheck in 5 minutes",
+                "15 grams; recheck in 15 minutes",
+                "30 grams; recheck in 30 minutes",
+                "50 grams; recheck in 1 hour"
+            ],
+            answer: 1,
+            rationale: "The Rule of 15 dictates giving 15 grams of fast-acting carbohydrate and rechecking the blood glucose after 15 minutes."
+        },
+        {
+            id: 16,
+            question: "If a patient receives a 15g carbohydrate dose for hypoglycemia, rechecks in 15 minutes, and their blood glucose remains low, what is the protocol before contacting the provider?",
+            options: [
+                "Give a second 15g dose of carbohydrates",
+                "Immediately give 10 more doses consecutively",
+                "Call the provider instantly without giving any more sugar",
+                "Double the patient's long-acting insulin dose"
+            ],
+            answer: 0,
+            rationale: "You can give a second 15g dose, recheck in 15 minutes; if it remains low after two total doses, you must notify the provider (do not give further doses without an order)."
+        },
+        {
+            id: 17,
+            question: "An unconscious patient experiencing severe hypoglycemia is brought into the emergency setting. What are appropriate emergency medical interventions if they cannot swallow? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Glucagon 1 mg IM or subcutaneous",
+                "25 to 50 mL of 50% Dextrose in water (D50W) IV push",
+                "Forcing 8 ounces of orange juice down the throat",
+                "Placing the patient in a lateral position to prevent aspiration if they vomit"
+            ],
+            answer: [0, 1, 3],
+            rationale: "Unconscious patients should never receive oral liquids due to aspiration risk. Appropriate treatments include Glucagon 1 mg IM/subcu, IV D50W push, and placing them in a lateral recovery position."
+        },
+        {
+            id: 18,
+            question: "What are the core characteristic components of Diabetic Ketoacidosis (DKA)? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Profound insulin deficiency",
+                "Hyperglycemia",
+                "Ketosis and metabolic acidosis",
+                "Severe dehydration and electrolyte loss",
+                "Complete absence of any blood glucose elevation"
+            ],
+            answer: [0, 1, 2, 3],
+            rationale: "DKA is caused by profound insulin deficiency and is characterized by hyperglycemia, ketosis, metabolic acidosis, dehydration, and electrolyte losses."
+        },
+        {
+            id: 19,
+            question: "Which breathing pattern is classically observed in clients with DKA as the body attempts to blow off carbon dioxide to compensate for metabolic acidosis?",
+            options: [
+                "Cheyne-Stokes respirations",
+                "Kussmaul respirations (deep, rapid breathing)",
+                "Biot's respirations",
+                "Paradoxical breathing"
+            ],
+            answer: 1,
+            rationale: "Kussmaul respirations are deep, rapid breaths characteristic of DKA as the respiratory system attempts to correct metabolic acidosis."
+        },
+        {
+            id: 20,
+            question: "What diagnostic laboratory thresholds define Diabetic Ketoacidosis (DKA)? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Blood glucose level ≥ 250 mg/dL",
+                "Blood pH < 7.30 (acidosis)",
+                "Serum bicarbonate level < 18 mEq/L",
+                "Presence of ketones in urine and serum",
+                "Blood glucose strictly under 70 mg/dL"
+            ],
+            answer: [0, 1, 2, 3],
+            rationale: "DKA diagnostic findings include blood glucose ≥ 250 mg/dL, blood pH < 7.30, serum bicarbonate < 18 mEq/L, and ketonuria/ketonemia."
+        },
+        {
+            id: 21,
+            question: "When a patient presents with DKA, what is the absolute **first** nursing and medical management step?",
+            options: [
+                "Administering IV fluid resuscitation with 0.9% NaCl",
+                "Administering oral sodium bicarbonate tablets",
+                "Starting a continuous regular insulin drip immediately without fluids",
+                "Discharging the patient with diet instructions"
+            ],
+            answer: 0,
+            rationale: "Correcting severe dehydration through IV fluid resuscitation (0.9% NaCl) is the first step of DKA management."
+        },
+        {
+            id: 22,
+            question: "What is the primary clinical and diagnostic distinction between Diabetic Ketoacidosis (DKA) and Hyperosmolar Hyperglycemic Nonketotic Syndrome (HHNS)?",
+            options: [
+                "HHNS features extreme blood glucose levels (>600 mg/dL) and profound neurological changes with an absence of significant ketoacidosis.",
+                "HHNS only occurs in pediatric patients with Type 1 diabetes.",
+                "DKA never features dehydration.",
+                "HHNS is treated exclusively with oral water restriction."
+            ],
+            answer: 0,
+            rationale: "HHNS occurs primarily in Type 2 diabetes, features extreme hyperglycemia (>600 mg/dL), prominent neurological symptoms, and an absence of significant ketoacidosis."
+        },
+        {
+            id: 23,
+            question: "Chronic microvascular complications of diabetes affect small blood vessels (capillaries). Which conditions are classic microvascular complications? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Diabetic retinopathy (eyes)",
+                "Diabetic nephropathy (kidneys)",
+                "Diabetic neuropathy (nerve damage)",
+                "Coronary artery disease / stroke (macrovascular)",
+                "Peripheral vascular disease (macrovascular)"
+            ],
+            answer: [0, 1, 2],
+            rationale: "Retinopathy, nephropathy, and neuropathy are microvascular complications involving thickening of capillary basement membranes, whereas stroke, CAD, and PVD are macrovascular."
+        },
+        {
+            id: 24,
+            question: "Which medication classes are commonly prescribed for diabetic nephropathy and hypertension to prevent the narrowing of blood vessels and protect kidney function?",
+            options: [
+                "ACE inhibitors ('-prils') and ARBs ('-sartans')",
+                "Beta-blockers ('-olol')",
+                "Loop diuretics exclusively",
+                "Proton pump inhibitors"
+            ],
+            answer: 0,
+            rationale: "ACE inhibitors ('-prils') and Angiotensin Receptor Blockers (ARBs, '-sartans') help prevent blood vessel narrowing and protect against diabetic nephropathy."
+        },
+        {
+            id: 25,
+            question: "What physical testing method is utilized annually to screen for loss of protective sensation in diabetic peripheral neuropathy?",
+            options: [
+                "Monofilament test",
+                "Digital rectal examination (DRE)",
+                "Electrocardiogram (ECG)",
+                "Pulmonary function spirometry"
+            ],
+            answer: 0,
+            rationale: "The monofilament test uses different strands and gauges to test pressure areas on the patient's feet to detect loss of protective sensation."
+        },
+        {
+            id: 26,
+            question: "Autonomic neuropathy affects involuntary body functions. Which clinical manifestations are associated with diabetic autonomic neuropathy? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Resting tachycardia and orthostatic hypotension",
+                "Painless myocardial infarctions (silent MI)",
+                "Gastroparesis (delayed gastric emptying and early satiety)",
+                "Neurogenic bladder (urinary retention and risk of UTIs)",
+                "Hyperactive voluntary skeletal muscle control"
+            ],
+            answer: [0, 1, 2, 3],
+            rationale: "Autonomic neuropathy affects involuntary nerves, leading to resting tachycardia, orthostatic hypotension, silent MIs, gastroparesis, and neurogenic bladder."
+        },
+        {
+            id: 27,
+            question: "What is the recommended minimum amount of weekly physical exercise prescribed for patients with diabetes to improve insulin utilization and cardiovascular health?",
+            options: [
+                "At least 30 minutes per week",
+                "At least 75 minutes per week",
+                "At least 150 minutes per week",
+                "At least 400 minutes per week"
+            ],
+            answer: 2,
+            rationale: "Patients should exercise at least 150 minutes per week to gain metabolic, lipid, and glycemic benefits."
+        },
+        {
+            id: 28,
+            question: "When should patients with diabetes purchase new footwear to ensure proper fit?",
+            options: [
+                "First thing in the morning when feet are smallest",
+                "In the evening, when feet are naturally swollen",
+                "Immediately after running a marathon",
+                "Right after soaking feet in ice water"
+            ],
+            answer: 1,
+            rationale: "Patients should purchase shoes in the evening when their feet are swollen to ensure the shoes fit properly and do not cause trauma."
+        },
+        {
+            id: 29,
+            question: "Which proper foot hygiene practices should a nurse teach a patient with diabetes? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Wash feet daily with mild soap and warm water",
+                "Pat feet dry gently, especially between the toes",
+                "Inspect feet daily for cuts, scrapes, or redness",
+                "Cut toenails straight across by yourself using sharp kitchen shears",
+                "Protect feet from extreme heat and cold"
+            ],
+            answer: [0, 1, 2, 4],
+            rationale: "Daily inspection, washing, gentle pat drying, and protecting from extremes are vital. Patients should *never* cut their own toenails—a podiatrist should handle nail care."
+        },
+        {
+            id: 30,
+            question: "What is the targeted clinical threshold for Glycosylated Hemoglobin (A1C) indicating good long-term glycemic control for many individuals with diabetes?",
+            options: [
+                "Less than 7%",
+                "Greater than 10%",
+                "Between 12% and 15%",
+                "Exactly 14%"
+            ],
+            answer: 0,
+            rationale: "An A1C level of 7% or higher indicates poor control; the goal is typically keeping levels under control (around or below 7%)."
+        },
+        {
+            id: 31,
+            question: "Which diagnostic lab test measures average blood glucose levels over a 2 to 3 month period?",
+            options: [
+                "Random capillary blood glucose",
+                "Glycated hemoglobin (A1C)",
+                "Urine ketone dipstick",
+                "Fasting serum potassium"
+            ],
+            answer: 1,
+            rationale: "The A1C test reflects average blood glucose levels over a 2- to 3-month period."
+        },
+        {
+            id: 32,
+            question: "What blood glucose threshold serves as the trigger point for patients (especially with Type 1 diabetes) to begin testing their urine for ketones during an acute illness?",
+            options: [
+                "Greater than 100 mg/dL",
+                "Greater than 150 mg/dL",
+                "Greater than 240 mg/dL",
+                "Greater than 500 mg/dL"
+            ],
+            answer: 2,
+            rationale: "When blood glucose is greater than 240 mg/dL during illness, patients should begin testing for urine ketones, especially in Type 1 diabetes."
+        },
+        {
+            id: 33,
+            question: "Which of the following dietary recommendations apply to individuals managing diabetes? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Carbohydrates have the greatest effect on blood glucose and should be monitored carefully",
+                "Omega-3 fatty acids from fish are recommended fat sources",
+                "Alcohol should be consumed on an empty stomach to boost blood sugar",
+                "Calorie-controlled diet planning tailored to height, weight, age, and activity"
+            ],
+            answer: [0, 1, 3],
+            rationale: "Carbohydrates heavily impact glucose, healthy fats like omega-3s are encouraged, and calorie-controlled planning is fundamental. Alcohol should *never* be consumed on an empty stomach because it stimulates insulin production and can cause severe hypoglycemia."
+        },
+        {
+            id: 34,
+            question: "Why is consuming alcohol on an empty stomach dangerous for a person with diabetes?",
+            options: [
+                "It stimulates insulin production and inhibits hepatic gluconeogenesis, causing severe hypoglycemia",
+                "It immediately converts all alcohol into pure protein",
+                "It causes permanent respiratory arrest within 2 minutes",
+                "It lowers blood cholesterol to zero"
+            ],
+            answer: 0,
+            rationale: "Alcohol stimulates insulin production and inhibits liver gluconeogenesis, putting the patient at high risk for hypoglycemia."
+        },
+        {
+            id: 35,
+            question: "What is 'Hypoglycemia Unawareness'?",
+            options: [
+                "A condition where the patient experiences hypoglycemia without experiencing the typical warning symptoms, often linked to autonomic neuropathy",
+                "When a patient refuses to test their blood sugar ever",
+                "When blood sugar remains permanently at 300 mg/dL without symptoms",
+                "An acute allergic reaction to inhaled insulin"
+            ],
+            answer: 0,
+            rationale: "Hypoglycemia unawareness means the patient does not experience warning signs (like shakiness or sweating) when blood sugar drops, often due to autonomic neuropathy."
+        },
+        {
+            id: 36,
+            question: "Which of the following are precipitating factors that can trigger DKA or hyperglycemic crises? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Infection or sepsis",
+                "Corticosteroid medications",
+                "Skipping or omitting diabetes medications / insulin",
+                "Physical or emotional stress",
+                "Drinking pure water"
+            ],
+            answer: [0, 1, 2, 3],
+            rationale: "Infection, illness, corticosteroids, missed medication doses, and stress are major precipitating factors for DKA and HHNS."
+        },
+        {
+            id: 37,
+            question: "What type of insulin is Afrezza?",
+            options: [
+                "Ultra rapid-acting inhaled insulin",
+                "Long-acting basal injection",
+                "Intermediate-acting NPH insulin",
+                "Oral tablet insulin"
+            ],
+            answer: 0,
+            rationale: "Afrezza is an ultra rapid-acting inhaled insulin administered at the beginning of a meal."
+        },
+        {
+            id: 38,
+            question: "What are the common clinical manifestations of hyperglycemia (the '3 Ps')?",
+            options: [
+                "Polyuria, polydipsia, polyphagia",
+                "Profound paralysis, ptosis, pallor",
+                "Palpitations, paresthesia, pruritus",
+                "Pyuria, proteinuria, pyelitis"
+            ],
+            answer: 0,
+            rationale: "The classic symptoms of hyperglycemia are polyuria (excessive urination), polydipsia (excessive thirst), and polyphagia (excessive hunger)."
+        },
+        {
+            id: 39,
+            question: "What is the primary underlying defect in Type 1 Diabetes Mellitus?",
+            options: [
+                "Destruction of pancreatic beta cells, typically via an autoimmune process",
+                "Insulin resistance alone with normal beta cell mass",
+                "Excessive glucagon production by the kidneys",
+                "Severe dietary deficiency of vitamin C"
+            ],
+            answer: 0,
+            rationale: "Type 1 diabetes is characterized by the autoimmune destruction of pancreatic beta cells, leading to absolute insulin deficiency."
+        },
+        {
+            id: 40,
+            question: "What is the primary underlying defect in Type 2 Diabetes Mellitus?",
+            options: [
+                "Insulin resistance combined with impaired insulin secretion",
+                "Complete autoimmune destruction of all pancreatic alpha cells",
+                "Hyposecretion of antidiuretic hormone",
+                "Excessive renal reabsorption of potassium"
+            ],
+            answer: 0,
+            rationale: "Type 2 diabetes involves insulin resistance and impaired insulin secretion, where the pancreas still produces some endogenous insulin."
+        },
+        {
+            id: 41,
+            question: "Which risk factors are strongly associated with the development of Type 2 Diabetes? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Overweight or obesity (BMI ≥ 25 kg/m²)",
+                "Sedentary lifestyle",
+                "Family history of diabetes",
+                "Age 45 years and older",
+                "Being exclusively under 10 years of age"
+            ],
+            answer: [0, 1, 2, 3],
+            rationale: "Obesity, sedentary lifestyle, family history, and age ≥ 45 are primary risk factors for Type 2 diabetes."
+        },
+        {
+            id: 42,
+            question: "What is gestational diabetes?",
+            options: [
+                "Onset of hyperglycemia first detected during pregnancy",
+                "Diabetes that only occurs in male patients over 60",
+                "A temporary form of hypoglycemia occurring during infancy",
+                "Renal tubular acidosis caused by prenatal vitamins"
+            ],
+            answer: 0,
+            rationale: "Gestational diabetes is the onset or first recognition of hyperglycemia during pregnancy."
+        },
+        {
+            id: 43,
+            question: "What are potential complications for babies born to mothers with poorly controlled gestational diabetes?",
+            options: [
+                "Delivery of very large babies (macrosomia) and higher likelihood of C-sections",
+                "Extreme low birth weight under 2 pounds",
+                "Complete absence of limbs",
+                "Permanent infant hypoglycemia lasting 10 years"
+            ],
+            answer: 0,
+            rationale: "Gestational diabetes typically results in delivering very large babies (macrosomia) who are more likely to require C-section deliveries."
+        },
+        {
+            id: 44,
+            question: "What is the recommended injection site rotation rule when administering insulin to prevent lipodystrophy?",
+            options: [
+                "Rotate sites within the same anatomical area (e.g., within the abdomen) and avoid injecting into sites planned for exercise",
+                "Inject into the exact same spot every single day",
+                "Only inject into the deltoid muscle",
+                "Switch to oral injections"
+            ],
+            answer: 0,
+            rationale: "Patients should rotate sites within one region to prevent lipodystrophy and avoid injecting into limbs or areas that will be exercised immediately after."
+        },
+        {
+            id: 45,
+            question: "Which medical conditions or drugs can induce secondary hyperglycemia or diabetes? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Cushing's syndrome / Corticosteroids",
+                "Hyperthyroidism",
+                "Recurrent pancreatitis",
+                "Thiazide diuretics",
+                "Potassium-sparing diuretics in normal doses"
+            ],
+            answer: [0, 1, 2, 3],
+            rationale: "Cushing's, corticosteroids, hyperthyroidism, pancreatitis, and thiazides interfere with insulin or glucose metabolism, causing secondary hyperglycemia."
+        },
+        {
+            id: 46,
+            question: "What is the primary role of glucagon, secreted by the alpha cells in the islets of Langerhans?",
+            options: [
+                "Stimulates the liver to release stored glucose (glycogen) to raise blood sugar",
+                "Drives all potassium into muscle cells aggressively",
+                "Promotes total fat accumulation exclusively in bones",
+                "Lowers blood glucose levels below 50 mg/dL"
+            ],
+            answer: 0,
+            rationale: "Glucagon stimulates the liver to release stored glycogen into glucose, working opposite to insulin to maintain normal blood glucose."
+        },
+        {
+            id: 47,
+            question: "When providing diabetes education to culturally diverse populations, what should be the nurse's first step?",
+            options: [
+                "Cultural awareness and sensitivity in understanding dietary preferences and meal preparation",
+                "Forcing the patient to eat a strict western diet immediately",
+                "Telling the patient they can never eat cultural foods again",
+                "Ignoring cultural background entirely"
+            ],
+            answer: 0,
+            rationale: "Cultural awareness and sensitivity is the first step in providing competent diabetes education, working with cultural food preferences using the MyPlate method."
+        },
+        {
+            id: 48,
+            question: "Why is regular dental care and screening important for patients with diabetes, particularly prior to open-heart or valve surgeries?",
+            options: [
+                "To ensure there is no hidden oral infection or abscess that could seed bacteria into the bloodstream and cause endocarditis",
+                "To whiten teeth for aesthetic purposes",
+                "To measure jawbone density",
+                "To extract all molars automatically"
+            ],
+            answer: 0,
+            rationale: "Oral care and dental screenings ensure there are no hidden infections before major surgeries like heart valve replacements to prevent bacteremia."
+        },
+        {
+            id: 49,
+            question: "What is the normal physiological blood glucose regulation range maintained by insulin?",
+            options: [
+                "70 to 110 mg/dL",
+                "40 to 60 mg/dL",
+                "150 to 250 mg/dL",
+                "300 to 400 mg/dL"
+            ],
+            answer: 0,
+            rationale: "Insulin stabilizes healthy serum glucose levels within the normal range of 70 to 110 mg/dL."
+        },
+        {
+            id: 50,
+            question: "What is the primary function of Biguanides (such as Metformin)?",
+            options: [
+                "Reduces glucose production by the liver and enhances insulin sensitivity",
+                "Destroys pancreatic alpha cells permanently",
+                "Blocks all carbohydrate digestion in the stomach",
+                "Acts as an ultra-long-acting basal insulin"
+            ],
+            answer: 0,
+            rationale: "Metformin reduces hepatic glucose production and enhances peripheral insulin sensitivity."
+        }
+    ];
+
+    let userAnswers = {};
+    let score = 0;
+
+    function initQuiz() {
+        const container = document.getElementById('quiz-container');
+        document.getElementById('total-count').textContent = quizData.length;
+
+        quizData.forEach((q, index) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+
+            let optionsHtml = '';
+            q.options.forEach((opt, optIndex) => {
+                const inputType = q.type === 'checkbox' ? 'checkbox' : 'radio';
+                optionsHtml += `
+                    <label class="option-item" id="opt-${index}-${optIndex}">
+                        <input type="${inputType}" name="q-${index}" value="${optIndex}">
+                        <span>${opt}</span>
+                    </label>
+                `;
+            });
+
+            card.innerHTML = `
+                <div class="question-title">Question ${index + 1}: ${q.question}</div>
+                <div class="options-list">${optionsHtml}</div>
+                <button class="btn" onclick="checkAnswer(${index})">Submit Answer</button>
+                <div class="rationale" id="rationale-${index}"><strong>Rationale:</strong> ${q.rationale}</div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function checkAnswer(index) {
+        const q = quizData[index];
+        const inputs = document.querySelectorAll(`input[name="q-${index}"]`);
+        
+        let selected = [];
+        inputs.forEach((input, optIdx) => {
+            if (input.checked) selected.push(optIdx);
+        });
+
+        if (selected.length === 0) {
+            alert('Please select an option first.');
+            return;
+        }
+
+        let isCorrect = false;
+        if (q.type === 'checkbox') {
+            const sortedSelected = [...selected].sort();
+            const sortedAnswer = [...q.answer].sort();
+            isCorrect = JSON.stringify(sortedSelected) === JSON.stringify(sortedAnswer);
+        } else {
+            isCorrect = selected[0] === q.answer;
+        }
+
+        // Highlight options
+        inputs.forEach((input, optIdx) => {
+            const label = document.getElementById(`opt-${index}-${optIdx}`);
+            if (q.type === 'checkbox') {
+                if (q.answer.includes(optIdx)) {
+                    label.classList.add('correct');
+                } else if (input.checked) {
+                    label.classList.add('incorrect');
+                }
+            } else {
+                if (optIdx === q.answer) {
+                    label.classList.add('correct');
+                } else if (input.checked) {
+                    label.classList.add('incorrect');
+                }
+            }
+            input.disabled = true;
+        });
+
+        // Show rationale
+        document.getElementById(`rationale-${index}`).classList.add('visible');
+        
+        // Track score if first time answering
+        if (!userAnswers[index]) {
+            userAnswers[index] = true;
+            document.getElementById('answered-count').textContent = Object.keys(userAnswers).length;
+            if (isCorrect) {
+                score++;
+                document.getElementById('score-count').textContent = score;
+            }
+        }
+    }
+
+    window.onload = initQuiz;
+</script>
+
+</body>
+</html>
