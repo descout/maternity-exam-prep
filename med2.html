@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive Med-Surg Mastery Exam (60 Questions)</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --success: #16a34a;
+            --error: #dc2626;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text: #1e293b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: var(--surface);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0 0 8px 0;
+            color: var(--primary-dark);
+            font-size: 1.8rem;
+        }
+
+        p.subtitle {
+            margin: 0;
+            color: #64748b;
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: space-around;
+            background: var(--primary);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 16px;
+            font-weight: bold;
+        }
+
+        .question-card {
+            background: var(--surface);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgb(0 0 0 / 0.05);
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .question-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+        }
+
+        .options-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0 0 16px 0;
+        }
+
+        .option-item {
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .option-item:hover {
+            background-color: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .option-item.correct {
+            background-color: #dcfce7 !important;
+            border-color: var(--success) !important;
+            color: #166534;
+        }
+
+        .option-item.incorrect {
+            background-color: #fee2e2 !important;
+            border-color: var(--error) !important;
+            color: #991b1b;
+        }
+
+        input[type="radio"], input[type="checkbox"] {
+            accent-color: var(--primary);
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .rationale {
+            margin-top: 12px;
+            padding: 12px;
+            background-color: #f8fafc;
+            border-left: 4px solid var(--primary);
+            border-radius: 4px;
+            font-size: 0.95rem;
+            display: none;
+        }
+
+        .rationale.visible {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Med-Surg Comprehensive Mastery Exam</h1>
+        <p class="subtitle">60-Question NCLEX-Style Interactive Review (Respiratory, GI, IBD, Nutrition & Varices)</p>
+        <div class="score-board">
+            <div>Answered: <span id="answered-count">0</span> / <span id="total-count">0</span></div>
+            <div>Score: <span id="score-count">0</span></div>
+        </div>
+    </header>
+
+    <div id="quiz-container"></div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            id: 1,
+            question: "A nurse is caring for an older adult client admitted with Community-Acquired Pneumonia (CAP). Which clinical manifestation is most commonly observed in older adults with pneumonia compared to younger populations?",
+            options: [
+                "High spiking fevers with chills",
+                "Acute confusion or altered mental status",
+                "Severe productive rust-colored sputum",
+                "Bradycardia and hypertension"
+            ],
+            answer: 1,
+            rationale: "Older adults often present with atypical signs of pneumonia such as confusion or low-grade/hypothermia rather than classic high fevers[cite: 13, 384]."
+        },
+        {
+            id: 2,
+            question: "A client is admitted with suspected Pulmonary Embolism (PE) following major orthopedic surgery. Which diagnostic test is the priority initial screening tool to help rule out or evaluate for PE?",
+            options: [
+                "D-dimer blood test",
+                "Arterial Blood Gases (ABGs)",
+                "Chest X-ray",
+                "Sputum culture"
+            ],
+            answer: 0,
+            rationale: "A D-dimer blood test measures clot breakdown protein fragments and is used as an initial screening tool to evaluate or help rule out PE[cite: 392]."
+        },
+        {
+            id: 3,
+            question: "A patient with a chest tube connected to a dry-suction water-seal system is being monitored by the nurse. Which finding in the water-seal chamber requires immediate nursing intervention?",
+            options: [
+                "Tidaling (fluctuation of water rising with inhalation and falling with expiration)",
+                "Continuous bubbling observed in the water-seal chamber",
+                "Intermittent gentle bubbling during client exhalation or coughing",
+                "Complete cessation of bubbling once the lung has fully re-expanded"
+            ],
+            answer: 1,
+            rationale: "Continuous bubbling in the water-seal chamber indicates an air leak in the system and requires immediate investigation and troubleshooting[cite: 40]."
+        },
+        {
+            id: 4,
+            question: "A patient with a diagnosis of Crohn's disease (Regional Enteritis) is admitted with severe right lower quadrant abdominal pain, steatorrhea, and weight loss. Which complication is most characteristic of Crohn's disease pathology? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Abscess formation and fistulas/fissures[cite: 358]",
+                "Continuous, uninterrupted lesions starting exclusively in the rectum[cite: 359]",
+                "Strictures leading to small bowel intestinal obstruction[cite: 358]",
+                "Cobblestone appearance of the intestinal mucosa[cite: 395]",
+                "Restriction of disease strictly limited to the mucosa and submucosa lining[cite: 359]"
+            ],
+            answer: [0, 2, 3],
+            rationale: "Crohn's disease features transmural inflammation, skip lesions with a cobblestone appearance[cite: 395], fistulas, abscesses, and strictures[cite: 358]. Continuous lesions starting in the rectum are characteristic of Ulcerative Colitis[cite: 359]."
+        },
+        {
+            id: 5,
+            question: "A patient with Ulcerative Colitis is experiencing an acute exacerbation with 15 bloody stools per day, fever, and tachycardia. Which life-threatening complication must the nurse monitor for closely?",
+            options: [
+                "Toxic megacolon[cite: 360]",
+                "Severe pulmonary hypertension",
+                "Esophageal variceal rupture",
+                "Dumping syndrome"
+            ],
+            answer: 0,
+            rationale: "Severe ulcerative colitis puts the patient at high risk for toxic megacolon (acute dilation of the colon) and colon perforation[cite: 360]."
+        },
+        {
+            id: 6,
+            question: "A nurse is administering Parenteral Nutrition (PN) via a central line. Why is a 1.2-micron filter mandatory for this infusion?",
+            options: [
+                "To filter out bacteria and large fat emulsion globules to prevent complications like pulmonary embolism[cite: 365]",
+                "To speed up the flow rate of hypertonic glucose solutions",
+                "To cool down the formula before it reaches the right atrium",
+                "To prevent blood from backing up into the intravenous tubing"
+            ],
+            answer: 0,
+            rationale: "A 1.2-micron microfilter must be used with PN, especially lipid/fat emulsions, to filter out large particles and prevent emboli or infection[cite: 365]."
+        },
+        {
+            id: 7,
+            question: "A client is receiving a continuous infusion of Total Parenteral Nutrition (TPN). The nurse notes that the bag has been hanging for 24 hours with 300 mL remaining. What is the correct nursing action?",
+            options: [
+                "Increase the pump rate temporarily to infuse the remaining 300 mL before the hour ends",
+                "Discard the remaining solution, hang a new bag of TPN at the prescribed rate, and change the tubing[cite: 366]",
+                "Slow the infusion down by half to preserve nutrients",
+                "Refrigerate the remaining solution for use later in the shift"
+            ],
+            answer: 1,
+            rationale: "TPN bags and tubing must be changed every 24 hours to prevent bacterial growth. Never speed up an infusion to catch up[cite: 366]."
+        },
+        {
+            id: 8,
+            question: "A patient post-esophagectomy for esophageal cancer has a nasogastric (NG) tube in place. What is the highest priority nursing instruction regarding this NG tube?",
+            options: [
+                "Irrigate the NG tube every 4 hours with 30 mL of normal saline",
+                "Advance the NG tube 2 cm if drainage stops",
+                "Never manipulate, reposition, or flush the NG tube because it can disrupt the surgical anastomosis[cite: 370]",
+                "Use the NG tube to initiate enteral tube feedings on postoperative day one"
+            ],
+            answer: 2,
+            rationale: "The NG tube post-esophagectomy is kept solely for decompression; nurses must never manipulate or move it because dislodging it can disrupt the suture line and cause mediastinal leakage[cite: 370]."
+        },
+        {
+            id: 9,
+            question: "A client with Gastroesophageal Reflux Disease (GERD) is prescribed lifestyle modifications. Which patient statement indicates an understanding of proper positioning and management?",
+            options: [
+                "\"I will lie flat immediately after eating my meals to help digestion.\"",
+                "\"I will elevate the head of my bed 4 to 8 inches and sleep on my left side[cite: 378].\"",
+                "\"I can eat large meals right before going to bed at night.\"",
+                "\"I should increase my intake of peppermint, coffee, and tomato-based foods[cite: 378].\""
+            ],
+            answer: 1,
+            rationale: "Elevating the head of the bed 4-8 inches and sleeping in a left side-lying position helps reduce gastric reflux episodes[cite: 378]."
+        },
+        {
+            id: 10,
+            question: "A patient with peptic ulcer disease is admitted with a rigid, board-like abdomen, severe generalized abdominal pain, and shock vitals. What complication does the nurse suspect?",
+            options: [
+                "Gastric outlet obstruction",
+                "Perforation with peritonitis[cite: 380]",
+                "Dumping syndrome",
+                "Pernicious anemia"
+            ],
+            answer: 1,
+            rationale: "A rigid, board-like abdomen and severe acute pain are hallmark signs of ulcer perforation leading to bacterial peritonitis, a surgical emergency[cite: 380]."
+        },
+        {
+            id: 11,
+            question: "A client with bleeding esophageal varices secondary to cirrhosis is actively vomiting bright red blood. Which pharmacological agent is a primary vasoconstrictor ordered to reduce portal pressure and control bleeding?",
+            options: [
+                "Octreotide (Sandostatin)[cite: 383]",
+                "Furosemide (Lasix)",
+                "Regular Insulin",
+                "Metoclopramide (Reglan)"
+            ],
+            answer: 0,
+            rationale: "Vasoconstrictors like Octreotide or Somatostatin are used to decrease splanchnic blood flow and lower portal hypertension during active variceal bleeding[cite: 383]."
+        },
+        {
+            id: 12,
+            question: "A patient returns from surgery with a new ileostomy. Which assessment finding requires immediate nursing intervention?",
+            options: [
+                "Stoma is dark purple/black and dry[cite: 365]",
+                "Stoma is pink, red, and moist[cite: 365]",
+                "Green-yellow liquid output is draining from the stoma during the first 48 hours[cite: 365]",
+                "Mild edema of the stoma post-operatively"
+            ],
+            answer: 0,
+            rationale: "A dark purple, dusky, or black stoma indicates ischemia and compromised blood supply, requiring immediate provider notification. A healthy stoma is pink/red and moist[cite: 365]."
+        },
+        {
+            id: 13,
+            question: "A nurse is caring for a patient experiencing Refeeding Syndrome after starting nutritional repletion. Which electrolyte abnormalities are classic hallmarks of this syndrome? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Severe hypophosphatemia[cite: 366]",
+                "Severe hypokalemia[cite: 366]",
+                "Severe hypomagnesemia[cite: 366]",
+                "Severe hypernatremia",
+                "Severe hypercalcemia"
+            ],
+            answer: [0, 1, 2],
+            rationale: "Refeeding syndrome drives phosphorus, potassium, and magnesium rapidly into cells upon insulin surge, resulting in profound serum deficits (hypophosphatemia being primary)[cite: 366]."
+        },
+        {
+            id: 14,
+            question: "A client with a tension pneumothorax exhibits tracheal deviation, absent breath sounds on the affected side, and hypotension. What is the immediate priority medical/nursing intervention?",
+            options: [
+                "Prepare for emergent needle decompression or chest tube insertion[cite: 59]",
+                "Administer oral cough suppressants",
+                "Place the patient flat in Trendelenburg position",
+                "Perform a 12-lead ECG"
+            ],
+            answer: 0,
+            rationale: "A tension pneumothorax causes life-threatening mediastinal shift and cardiovascular collapse; immediate needle decompression or chest tube thoracostomy is required[cite: 59]."
+        },
+        {
+            id: 15,
+            question: "A nurse is reviewing lab values for a client with Ulcerative Colitis. Which medication class is considered the first-line treatment for reducing inflammation during mild-to-moderate flare-ups?",
+            options: [
+                "Aminosalicylates (5-ASA), such as Sulfasalazine[cite: 363]",
+                "Systemic long-term chemotherapy agents",
+                "Loop diuretics",
+                "Inhaled beta-agonists"
+            ],
+            answer: 0,
+            rationale: "Aminosalicylates (5-ASA) like sulfasalazine or mesalamine coat the mucosal lining and serve as first-line anti-inflammatory therapy for IBD[cite: 363]."
+        },
+        {
+            id: 16,
+            question: "A patient is scheduled for a barium swallow test with fluoroscopy. Which post-procedure instruction is critical to prevent complications?",
+            options: [
+                "Restrict all fluid intake for 48 hours",
+                "Encourage generous fluid intake and administer laxatives to clear barium and prevent obstruction[cite: 373]",
+                "Maintain strict bedrest for 24 hours",
+                "Check blood glucose every 2 hours"
+            ],
+            answer: 1,
+            rationale: "Barium can harden in the gastrointestinal tract and cause severe obstruction; patients must drink plenty of fluids and take prescribed laxatives post-test[cite: 373]."
+        },
+        {
+            id: 17,
+            question: "A patient with a Sengstaken-Blakemore tube for bleeding esophageal varices suddenly develops severe respiratory distress and air hunger. What is the nurse's immediate action?",
+            options: [
+                "Cut or deflate the balloon port immediately to relieve tracheal compression[cite: 384]",
+                "Increase the suction pressure on the gastric port",
+                "Administer sublingual nitroglycerin",
+                "Place the patient in a flat supine position"
+            ],
+            answer: 0,
+            rationale: "The esophageal balloon can slip and obstruct the airway, causing acute respiratory distress. Cutting or deflating the balloon immediately (per protocol/physician order) relieves tracheal compression[cite: 384]."
+        },
+        {
+            id: 18,
+            question: "When assessing a client with a flail chest resulting from multiple rib fractures, what classic clinical sign does the nurse expect to observe?",
+            options: [
+                "Paradoxical chest wall movement (inward movement during inspiration, outward during expiration)[cite: 50]",
+                "Hyperactive bowel sounds over the thorax",
+                "Symmetric bilateral chest expansion",
+                "Tracheal deviation toward the uninjured side"
+            ],
+            answer: 0,
+            rationale: "Flail chest occurs when 3+ consecutive ribs are fractured in 2+ places, causing unstable segments that move paradoxically during respiration[cite: 50]."
+        },
+        {
+            id: 19,
+            question: "A patient who underwent a partial gastrectomy (Billroth II procedure) complains of dizziness, palpitations, and abdominal cramping 20 minutes after eating. What condition is this patient experiencing?",
+            options: [
+                "Dumping syndrome caused by rapid gastric emptying into the jejunum[cite: 381]",
+                "Acute myocardial infarction",
+                "Bacterial peritonitis",
+                "Hyperglycemic hyperosmolar state"
+            ],
+            answer: 0,
+            rationale: "Dumping syndrome occurs 15-30 minutes post-meal when food moves too rapidly into the small intestine, triggering vasomotor and gastrointestinal symptoms[cite: 381]."
+        },
+        {
+            id: 20,
+            question: "A client is diagnosed with Barrett's esophagus secondary to chronic GERD. Why does this condition require close follow-up (such as repeat EGD)?",
+            options: [
+                "It represents cellular metaplasia that significantly increases the risk of developing esophageal cancer[cite: 375]",
+                "It causes permanent paralysis of the vocal cords",
+                "It prevents any future absorption of water",
+                "It automatically cures all underlying gastric acid secretion"
+            ],
+            answer: 0,
+            rationale: "Barrett's esophagus involves cellular changes (metaplasia) from chronic acid damage, which is a major precursor and risk factor for esophageal adenocarcinoma[cite: 375]."
+        },
+        {
+            id: 21,
+            question: "A nurse is monitoring a chest drainage system. The fluid in the water-seal chamber rises during inhalation and falls during expiration (tidaling)[cite: 41]. How should the nurse interpret this finding?",
+            options: [
+                "The chest drainage system and tube are functioning normally[cite: 41]",
+                "There is a major air leak in the thoracic cavity",
+                "The lung has fully re-expanded and suction can be discontinued",
+                "The collection chamber is completely full and needs immediate replacement"
+            ],
+            answer: 0,
+            rationale: "Tidaling in the water-seal chamber reflects normal pressure changes with respiration, indicating the chest tube is patent and functioning properly[cite: 41]."
+        },
+        {
+            id: 22,
+            question: "A patient with suspected Peptic Ulcer Disease is scheduled for an H. pylori breath test. What instructions should be provided to ensure accurate results?",
+            options: [
+                "The patient will swallow a carbon-labeled urea solution, and breath samples will be analyzed for CO2[cite: 380]",
+                "The patient must fast for 7 days prior to the test",
+                "The patient must exercise vigorously for 1 hour before blowing into the bag",
+                "The test requires collecting a 24-hour urine specimen"
+            ],
+            answer: 0,
+            rationale: "The H. pylori breath test involves drinking a urea solution; if the bacteria is present, it breaks down urea into labeled CO2, which is detected in the breath[cite: 380]."
+        },
+        {
+            id: 23,
+            question: "A client is admitted with Cardiac Tamponade following chest trauma. Which classic assessment findings are part of Beck's triad for this condition? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Hypotension[cite: 52]",
+                "Jugular vein distension (JVD)[cite: 52]",
+                "Muffled, distant heart sounds[cite: 52]",
+                "Bounding peripheral pulses with high blood pressure",
+                "Hyperactive breath sounds bilaterally"
+            ],
+            answer: [0, 1, 2],
+            rationale: "Beck's triad for cardiac tamponade consists of hypotension, jugular vein distension (JVD), and muffled/distant heart sounds due to pericardial fluid compression[cite: 52]."
+        },
+        {
+            id: 24,
+            question: "A patient with Achalasia presents with dysphagia and chest pain. Which diagnostic test or procedure is commonly used therapeutically to stretch the lower esophageal sphincter?",
+            options: [
+                "Pneumatic balloon dilation[cite: 375]",
+                "Rapid surgical gastrostomy tube insertion",
+                "Pericardiocentesis",
+                "Endoscopic retrograde cholangiopancreatography (ERCP)"
+            ],
+            answer: 0,
+            rationale: "Pneumatic dilation utilizes a bougie and inflatable balloon to stretch and relax the narrowed lower esophageal sphincter in achalasia[cite: 375]."
+        },
+        {
+            id: 25,
+            question: "A nurse is caring for a client with pneumonia who has thick, tenacious pulmonary secretions. Which nursing interventions assist in mobilizing and thinning these secretions? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Encouraging fluid intake up to 3 to 4 liters per day (unless contraindicated)[cite: 389]",
+                "Using a cool mist humidifier in the room[cite: 390]",
+                "Administering prescribed expectorants and maintaining humidified oxygen[cite: 389]",
+                "Enforcing strict NPO status for 72 hours",
+                "Restricting all physical movement and bedrest"
+            ],
+            answer: [0, 1, 2],
+            rationale: "Adequate hydration (3-4L/day), humidified oxygen, and cool mist humidifiers help liquefy and loosen thick respiratory secretions[cite: 389, 390]."
+        },
+        {
+            id: 26,
+            question: "A patient with a hiatal hernia asks what causes this condition. Which factors contribute to increased intra-abdominal pressure and hiatal hernia formation? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Obesity and pregnancy[cite: 372]",
+                "Heavy lifting and straining during bowel movements[cite: 372]",
+                "Chronic coughing[cite: 372]",
+                "Wearing tight corsets or girdles[cite: 372]",
+                "Consuming a high-protein vegetarian diet"
+            ],
+            answer: [0, 1, 2, 3],
+            rationale: "Factors increasing intra-abdominal pressure include obesity, pregnancy, heavy lifting, straining, coughing, and tight garments, which weaken the diaphragmatic hiatus[cite: 372]."
+        },
+        {
+            id: 27,
+            question: "A client is prescribed Metformin for Type 2 diabetes and is scheduled for a CT scan with intravenous iodinated contrast dye. What essential safety instruction must be given?",
+            options: [
+                "Discontinue Metformin at least 48 hours before and after contrast to prevent lactic acidosis and renal failure[cite: 358]",
+                "Double the Metformin dose on the morning of the scan",
+                "Take Metformin only with grapefruit juice",
+                "No medication adjustments are necessary"
+            ],
+            answer: 0,
+            rationale: "Metformin must be withheld for 48 hours around iodinated contrast procedures to protect renal function and avoid fatal lactic acidosis[cite: 358]."
+        },
+        {
+            id: 28,
+            question: "A patient with Zenker's diverticulum complains of regurgitation of undigested food hours after eating, gurgling noises, and halitosis. What anatomical feature defines this disorder?",
+            options: [
+                "An outpouching of mucosa and submucosa through a weak point in the pharyngoesophageal wall[cite: 373]",
+                "A complete stricture of the pyloric sphincter",
+                "Varicose dilation of gastric veins",
+                "A sliding protrusion of the stomach above the diaphragm"
+            ],
+            answer: 0,
+            rationale: "Zenker's diverticulum is an esophageal pouch (outpouching of mucosa/submucosa) that traps food, leading to regurgitation, gurgling, and foul breath (halitosis)[cite: 373]."
+        },
+        {
+            id: 29,
+            question: "A nurse is evaluating a client's understanding of dietary management for Inflammatory Bowel Disease (IBD) during an acute flare-up. Which food selection by the client indicates a need for further teaching?",
+            options: [
+                "Raw salads with nuts, seeds, and bran cereal[cite: 362]",
+                "Mashed potatoes and soft cooked lean chicken",
+                "Soy milk as a dairy alternative[cite: 362]",
+                "Low-residue, high-protein cooked foods[cite: 361]"
+            ],
+            answer: 0,
+            rationale: "During IBD flare-ups, raw fruits, vegetables with peels, nuts, seeds, and high-fiber/bran cereals must be avoided because they irritate the bowel and trigger diarrhea[cite: 362]."
+        },
+        {
+            id: 30,
+            question: "A patient with a pulmonary embolism is started on IV Heparin infusion and oral Warfarin (Coumadin). What is the primary clinical purpose of overlapping Heparin and Warfarin for several days?",
+            options: [
+                "Warfarin takes several days to achieve therapeutic therapeutic anticoagulant effect (indicated by target INR), whereas heparin acts immediately",
+                "To dissolve bone calcium deposits",
+                "To prevent heparin-induced skin rashes",
+                "To lower systemic blood pressure"
+            ],
+            answer: 0,
+            rationale: "Warfarin requires 3-5 days to reach therapeutic levels; heparin is overlapped until the INR reaches the therapeutic range to ensure continuous anticoagulation."
+        },
+        {
+            id: 31,
+            question: "A client is receiving Thrombolytic therapy (such as Alteplase or TNK) for a massive pulmonary embolism. Which nursing assessment is the highest priority during this infusion?",
+            options: [
+                "Monitoring closely for signs of active bleeding (e.g., gums, IV sites, hematuria)[cite: 393]",
+                "Encouraging ambulation in the hallway every hour",
+                "Performing chest physiotherapy and percussion",
+                "Massaging the lower extremities to relieve DVT pain"
+            ],
+            answer: 0,
+            rationale: "Thrombolytics ('clot busters') carry a high risk of hemorrhage. Nurses must avoid invasive procedures and monitor vigilantly for bleeding[cite: 393]."
+        },
+        {
+            id: 32,
+            question: "A nurse is caring for an older adult client with a suspected urinary tract infection. The client has no dysuria or frequency but presents with acute confusion and a low-grade fever. How should the nurse interpret this finding?",
+            options: [
+                "This is a classic presentation of a UTI or infection in older adults[cite: 384]",
+                "This indicates primary Alzheimer's disease onset",
+                "This is a normal baseline for all hospitalized seniors",
+                "This confirms acute myocardial infarction"
+            ],
+            answer: 0,
+            rationale: "Older adults frequently present with acute delirium, altered mental status, or confusion as the primary manifestation of a UTI or pneumonia[cite: 384]."
+        },
+        {
+            id: 33,
+            question: "A patient with a chest drainage system accidentally disconnects the chest tube from the collection device. What is the immediate first nursing action?",
+            options: [
+                "Immerse the end of the chest tube briefly in sterile water to create a water seal, or clamp briefly only if ordered/emergency",
+                "Leave the tube open to room air indefinitely",
+                "Call the surgeon and leave the patient unattended",
+                "Administer oral pain medication"
+            ],
+            answer: 0,
+            rationale: "Submerging the disconnected tube tip in sterile water re-establishes a water seal and prevents air from entering the pleural space until a new system is attached."
+        },
+        {
+            id: 34,
+            question: "Which surgical procedure for Peptic Ulcer Disease involves cutting branches of the vagus nerve to decrease gastric acid secretion?",
+            options: [
+                "Vagotomy[cite: 380]",
+                "Pyloroplasty[cite: 381]",
+                "Nissen fundoplication",
+                "Billroth I gastroduodenostomy[cite: 381]"
+            ],
+            answer: 0,
+            rationale: "A vagotomy severs all or part of the vagus nerve supply to the stomach to reduce vagally stimulated hydrochloric acid secretion[cite: 380]."
+        },
+        {
+            id: 35,
+            question: "A patient with severe GERD undergoes a Nissen Fundoplication. What does this surgical procedure entail?",
+            options: [
+                "Wrapping the fundus of the stomach around the lower portion of the esophagus to reinforce the LES[cite: 378]",
+                "Resecting the entire duodenum and jejunum",
+                "Widening the pyloric sphincter with a vertical incision",
+                "Placing an adjustable silicone band around the mid-stomach"
+            ],
+            answer: 0,
+            rationale: "Nissen fundoplication reinforces the lower esophageal sphincter by wrapping the gastric fundus around the distal esophagus[cite: 378]."
+        },
+        {
+            id: 36,
+            question: "A client is diagnosed with Class 3 Morbid Obesity with a BMI greater than 40 kg/m2[cite: 382]. Which surgical weight loss procedure involves creating a small gastric pouch (10-15 mL) with an adjustable silicone band[cite: 382]?",
+            options: [
+                "Lap-Band / Gastric Banding[cite: 382]",
+                "Roux-en-Y Gastric Bypass",
+                "Total Colectomy",
+                "Truncal Vagotomy"
+            ],
+            answer: 0,
+            rationale: "Gastric banding (Lap-Band) uses an adjustable silicone band to create a small upper gastric pouch, restricting food intake[cite: 382]."
+        },
+        {
+            id: 37,
+            question: "A patient with regional enteritis (Crohn's disease) has a right lower quadrant ileostomy. What is normal expected appearance and output consistency for an ileostomy?",
+            options: [
+                "Continuous, liquid to pasty green-yellow drainage because stool bypasses the colon[cite: 365]",
+                "Solid, formed stool passed once every 3 days",
+                "Bright red bloody discharge continuously after week 2",
+                "Complete absence of fecal output"
+            ],
+            answer: 0,
+            rationale: "An ileostomy drains liquid to semi-liquid contents continuously because the large intestine (which absorbs water) has been bypassed or removed[cite: 365]."
+        },
+        {
+            id: 38,
+            question: "A nurse is administering a prescribed dose of Metoclopramide (Reglan) to a client with GERD. What is the primary mechanism and classification of this drug?",
+            options: [
+                "Prokinetic agent that accelerates gastric emptying and strengthens LES tone[cite: 378]",
+                "Proton pump inhibitor that neutralizes pepsin",
+                "Narcotic analgesic for abdominal cramping",
+                "Antibiotic that eradicates H. pylori"
+            ],
+            answer: 0,
+            rationale: "Metoclopramide is a prokinetic drug that enhances gastric motility and LES pressure, reducing reflux potential[cite: 378]."
+        },
+        {
+            id: 39,
+            question: "A patient with suspected pneumonia has a sputum sample ordered. When is the best time for the nurse to collect this specimen?",
+            options: [
+                "First thing in the morning before the patient eats or drinks",
+                "Immediately after the patient finishes a heavy meal",
+                "Just before administering broad-spectrum antibiotics[cite: 388]",
+                "Both A and C"
+            ],
+            answer: 3,
+            rationale: "Sputum specimens are ideally collected in the early morning and MUST be obtained before starting antibiotic therapy to ensure accurate culture and sensitivity results[cite: 388]."
+        },
+        {
+            id: 40,
+            question: "A client with a history of severe chronic liver disease presents with massive hematemesis, black tarry stools (melena), and hypotension. What is the priority emergency nursing intervention?",
+            options: [
+                "Establish large-bore IV access for fluid resuscitation, ensure airway patency, and prepare for emergent endoscopy/variceal banding[cite: 383]",
+                "Administer oral laxatives to clear the bowel",
+                "Send the patient home with diet instructions",
+                "Apply warm compresses to the abdomen"
+            ],
+            answer: 0,
+            rationale: "Acute variceal hemorrhage is a life-threatening emergency requiring airway management, aggressive volume resuscitation, and urgent endoscopic band ligation[cite: 383]."
+        },
+        {
+            id: 41,
+            question: "A patient with peptic ulcer disease experiences gastric outlet obstruction. What clinical manifestations does the nurse expect to assess? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Epigastric fullness and abdominal distention[cite: 380]",
+                "Nausea and projectile vomiting of undigested food[cite: 380]",
+                "Unintentional weight loss[cite: 380]",
+                "Continuous explosive watery diarrhea without nausea",
+                "Hypertension and bradycardia"
+            ],
+            answer: [0, 1, 2],
+            rationale: "Gastric outlet obstruction causes food to back up, leading to epigastric fullness, nausea, vomiting, and weight loss due to inability to empty the stomach[cite: 380]."
+        },
+        {
+            id: 42,
+            question: "A nurse is teaching a patient about risk factors for esophageal cancer. Which lifestyle factors are strongly linked to squamous cell carcinoma and adenocarcinoma of the esophagus? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Chronic alcohol and tobacco use[cite: 369]",
+                "Barrett's esophagus[cite: 369]",
+                "Chronic ingestion of very hot foods and liquids[cite: 369]",
+                "Central obesity[cite: 369]",
+                "Regular daily aerobic exercise"
+            ],
+            answer: [0, 1, 2, 3],
+            rationale: "Esophageal cancer risk factors include alcohol, tobacco, Barrett's esophagus, hot foods/liquids, nitrosamines, and central obesity[cite: 369]."
+        },
+        {
+            id: 43,
+            question: "A client with a chest tube is prescribed range-of-motion exercises for the affected shoulder[cite: 46]. What is the primary rationale for this intervention?",
+            options: [
+                "To prevent frozen shoulder and restore joint mobility post-trauma or surgery[cite: 46]",
+                "To increase suction pressure inside the drainage system",
+                "To force air out through the subcutaneous tissue",
+                "To replace the need for chest X-rays"
+            ],
+            answer: 0,
+            rationale: "Shoulder ROM exercises prevent joint stiffness, adhesive capsulitis (frozen shoulder), and muscle atrophy following chest surgery or trauma[cite: 46]."
+        },
+        {
+            id: 44,
+            question: "A patient receiving TPN develops a sudden fever, chills, tachycardia, and erythema at the central venous catheter insertion site. What complication does the nurse suspect?",
+            options: [
+                "Catheter-Related Bloodstream Infection (CRBSI)[cite: 366]",
+                "Dumping syndrome",
+                "Pernicious anemia",
+                "Somogyi effect"
+            ],
+            answer: 0,
+            rationale: "Fever, chills, tachycardia, and local site erythema/tenderness are classic signs of CRBSI in a patient receiving parenteral nutrition[cite: 366]."
+        },
+        {
+            id: 45,
+            question: "A nurse is assessing a patient with a duodenal ulcer. How does this pain typically present compared to a gastric ulcer?",
+            options: [
+                "Duodenal ulcer pain occurs 2 to 4 hours post-meal and is relieved by eating food; gastric ulcer pain worsens with eating[cite: 380]",
+                "Duodenal ulcer pain worsens immediately upon eating",
+                "Duodenal ulcer pain is felt exclusively in the right shoulder",
+                "There is no difference in pain patterns"
+            ],
+            answer: 0,
+            rationale: "Duodenal ulcers cause burning epigastric pain 2-4 hours after eating that improves with food (which buffers acid), whereas gastric ulcers worsen with food intake[cite: 380]."
+        },
+        {
+            id: 46,
+            question: "A client with Ulcerative Colitis has a total proctocolectomy with a permanent ileostomy. What permanent anatomical change occurs with this surgery?",
+            options: [
+                "The entire colon and rectum are removed, and fecal elimination occurs via a permanent abdominal stoma[cite: 364]",
+                "Only the appendix is removed",
+                "A J-pouch is connected directly to the anal sphincter with no stoma",
+                "The stomach is attached directly to the descending colon"
+            ],
+            answer: 0,
+            rationale: "A total proctocolectomy removes the entire colon and rectum, necessitating a permanent ileostomy for fecal diversion[cite: 364]."
+        },
+        {
+            id: 47,
+            question: "A nurse is caring for a client with a pneumothorax who has a chest tube connected to a water-seal system. The nurse observes that tidaling has completely stopped[cite: 41]. What could this indicate? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "The lung has fully re-expanded[cite: 41]",
+                "There is an obstruction, kink, or clot in the tubing[cite: 41]",
+                "The suction control motor has failed",
+                "The patient has developed a new tension pneumothorax due to a blocked line"
+            ],
+            answer: [0, 1, 3],
+            rationale: "Stopped tidaling can mean lung re-expansion (desired) or a kink/clot obstructing the system (dangerous), which must be immediately investigated[cite: 41]."
+        },
+        {
+            id: 48,
+            question: "Which vitamin and mineral deficiencies are common long-term post-operative complications following gastric surgeries or resections that disrupt intrinsic factor or absorption?",
+            options: [
+                "Vitamin B12 (pernicious anemia) and fat-soluble vitamins (A, D, E, K)[cite: 362]",
+                "Vitamin C exclusively",
+                "Sodium and chloride only",
+                "Vitamin K deficiency leading to rapid clotting"
+            ],
+            answer: 0,
+            rationale: "Loss of intrinsic factor from gastric surgery impairs vitamin B12 absorption (causing pernicious anemia), and fat malabsorption leads to deficiencies in vitamins A, D, E, and K[cite: 362]."
+        },
+        {
+            id: 49,
+            question: "A patient with an esophageal diverticulum (Zenker's) asks why they experience gurgling noises and foul breath (halitosis). What is the nurse's best explanation?",
+            options: [
+                "Food particles become trapped in the esophageal pouch (diverticulum), where they ferment and decompose[cite: 374]",
+                "Gastric acid is dissolving tooth enamel",
+                "Air is entering the stomach via the bloodstream",
+                "Bile is refluxing into the oral cavity"
+            ],
+            answer: 0,
+            rationale: "Diverticula trap undigested food, leading to fermentation, bacterial growth, gurgling sounds, and halitosis[cite: 374]."
+        },
+        {
+            id: 50,
+            question: "A nurse is preparing to administer a unit of packed red blood cells to a patient with severe anemia secondary to Crohn's disease. What is the priority nursing safety action before and during administration?",
+            options: [
+                "Verify blood type and crossmatch with a second nurse, use dedicated Y-tubing with 0.9% Normal Saline, and monitor vital signs closely[cite: 394]",
+                "Warm the blood in a microwave oven for 3 minutes",
+                "Mix intravenous medications directly into the blood bag",
+                "Infuse the unit rapidly over 10 minutes"
+            ],
+            answer: 0,
+            rationale: "Blood administration requires rigorous two-nurse bedside verification, Y-tubing primed with normal saline, and close vital sign monitoring to catch transfusion reactions early[cite: 394]."
+        },
+        {
+            id: 51,
+            question: "A client with acute pancreatitis and subsequent gastric mucosal stress is at risk for Stress-Related Mucosal Disease (SRMD). What is the primary pathophysiological mechanism of SRMD?",
+            options: [
+                "Stress-induced ischemia leading to mucosal barrier breakdown and acid hypersecretion[cite: 382]",
+                "Autoimmune destruction of the pancreatic islets",
+                "Bacterial overgrowth in the large intestine",
+                "Excessive production of intrinsic factor"
+            ],
+            answer: 0,
+            rationale: "Physiologic stress causes mucosal ischemia, breaking down the gastric barrier and allowing acid/pepsin to erode the lining (SRMD)[cite: 382]."
+        },
+        {
+            id: 52,
+            question: "A patient with GERD is prescribed an H2-receptor antagonist (such as Famotidine). How do H2 blockers work to alleviate symptoms?",
+            options: [
+                "They decrease the volume and concentration of secreted gastric acid[cite: 378]",
+                "They permanently seal the lower esophageal sphincter closed",
+                "They coat active ulcer craters like a protective bandage",
+                "They kill H. pylori bacteria directly"
+            ],
+            answer: 0,
+            rationale: "H2-receptor blockers (e.g., famotidine, cimetidine) block histamine receptors on parietal cells, decreasing gastric acid secretion[cite: 378]."
+        },
+        {
+            id: 53,
+            question: "A patient post-thoracotomy for chest trauma has a chest tube. The nurse notes 250 mL of bright red blood drainage in the collection chamber during the first hour. What is the correct nursing action?",
+            options: [
+                "Immediately notify the physician, as drainage greater than 200 mL in the first hour is abnormal and indicates hemorrhage[cite: 45]",
+                "Document the finding as normal post-operative drainage",
+                "Clamp the chest tube immediately to stop bleeding",
+                "Milk the chest tube vigorously to clear clots"
+            ],
+            answer: 0,
+            rationale: "Drainage exceeding 200 mL in the first hour or 100 mL/hour thereafter must be reported immediately as a sign of potential postoperative hemorrhage[cite: 45]."
+        },
+        {
+            id: 54,
+            question: "A nurse is providing discharge teaching for a client with Diverticulitis/Diverticulum of the esophagus. Which dietary modification should be emphasized?",
+            options: [
+                "Avoid nuts, seeds, and popcorn that can get trapped in pouches, and consume blenderized or soft foods[cite: 374]",
+                "Eat a high-seed diet to promote bowel regularity",
+                "Consume raw fibrous celery and popcorn daily",
+                "Restrict all fluid intake completely"
+            ],
+            answer: 0,
+            rationale: "Patients with esophageal or intestinal diverticula should avoid nuts, seeds, and popcorn because they can lodge in pouches and cause irritation, inflammation, or perforation[cite: 374]."
+        },
+        {
+            id: 55,
+            question: "A patient is admitted with Pleural Effusion and Chylothorax. What defines Chylothorax?",
+            options: [
+                "The presence of lymphatic fluid (chyle) in the pleural space, caused by trauma or malignancy[cite: 60]",
+                "Accumulation of purulent pus due to bacterial pneumonia",
+                "Bleeding into the pericardial sac",
+                "Air trapped in the mediastinum"
+            ],
+            answer: 0,
+            rationale: "Chylothorax is the accumulation of milky lymphatic fluid in the pleural space resulting from thoracic duct disruption due to trauma or malignancy[cite: 60]."
+        },
+        {
+            id: 56,
+            question: "A client is prescribed Sucralfate (Carafate) for peptic ulcer disease. When is the best time for the nurse to administer this medication?",
+            options: [
+                "On an empty stomach, typically 1 hour before meals[cite: 379]",
+                "Immediately after eating a heavy meal",
+                "Mixed directly into TPN lipids",
+                "At bedtime only"
+            ],
+            answer: 0,
+            rationale: "Sucralfate acts as a mucosal protective agent; it binds to ulcer sites best when given on an empty stomach before meals[cite: 379]."
+        },
+        {
+            id: 57,
+            question: "A nurse is caring for a patient on mechanical ventilation. Which evidence-based interventions are included in the ventilator bundle to prevent Ventilator-Associated Pneumonia (VAP)? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Elevating the head of the bed 30 to 45 degrees",
+                "Performing meticulous daily oral care with chlorhexidine protocols",
+                "Maintaining closed suctioning systems",
+                "Assessing readiness for extubation daily",
+                "Extubating the patient every 2 hours routinely"
+            ],
+            answer: [0, 1, 2, 3],
+            rationale: "The VAP bundle includes HOB elevation, daily sedation vacations/extubation assessment, oral care, and closed suctioning to minimize aspiration and infection risks."
+        },
+        {
+            id: 58,
+            question: "A patient with regional enteritis is prescribed Immunomodulators such as Azathioprine or Methotrexate. What major adverse effects and lab parameters must the nurse monitor? (Select all that apply)",
+            type: "checkbox",
+            options: [
+                "Bone marrow suppression (anemia, leukopenia, thrombocytopenia)[cite: 363]",
+                "Increased risk for severe infections[cite: 395]",
+                "Liver enzyme elevations",
+                "Permanent hair loss on the scalp exclusively"
+            ],
+            answer: [0, 1, 2],
+            rationale: "Immunomodulators suppress the immune system, increasing infection risk and causing potential bone marrow suppression and hepatotoxicity[cite: 363, 395]."
+        },
+        {
+            id: 59,
+            question: "A nurse is caring for a client with a pneumothorax who has a Heimlich (Flutter) valve attached to their chest tube. What is the function of this valve?",
+            options: [
+                "It acts as a one-way mechanical valve that allows air to escape from the pleural space during exhalation while preventing air from re-entering[cite: 44]",
+                "It delivers active suction at -40 cm H2O",
+                "It measures exact daily caloric intake",
+                "It infuses sterile water into the lungs"
+            ],
+            answer: 0,
+            rationale: "A Heimlich valve is a one-way flutter valve that permits air/fluid egress from the chest while preventing backflow into the pleural cavity[cite: 44]."
+        },
+        {
+            id: 60,
+            question: "A patient with chronic Ulcerative Colitis is at a significantly increased lifetime risk for which major malignancy?",
+            options: [
+                "Colorectal cancer[cite: 360]",
+                "Small cell lung cancer",
+                "Primary brain glioblastoma",
+                "Testicular seminoma"
+            ],
+            answer: 0,
+            rationale: "Long-standing chronic inflammation in Ulcerative Colitis places the patient at high risk for dysplasia and colorectal cancer, necessitating regular screening colonoscopies[cite: 360]."
+        }
+    ];
+
+    let userAnswers = {};
+    let score = 0;
+
+    function initQuiz() {
+        const container = document.getElementById('quiz-container');
+        document.getElementById('total-count').textContent = quizData.length;
+
+        quizData.forEach((q, index) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+
+            let optionsHtml = '';
+            q.options.forEach((opt, optIndex) => {
+                const inputType = q.type === 'checkbox' ? 'checkbox' : 'radio';
+                optionsHtml += `
+                    <label class="option-item" id="opt-${index}-${optIndex}">
+                        <input type="${inputType}" name="q-${index}" value="${optIndex}">
+                        <span>${opt}</span>
+                    </label>
+                `;
+            });
+
+            card.innerHTML = `
+                <div class="question-title">Question ${index + 1}: ${q.question}</div>
+                <div class="options-list">${optionsHtml}</div>
+                <button class="btn" onclick="checkAnswer(${index})">Submit Answer</button>
+                <div class="rationale" id="rationale-${index}"><strong>Rationale:</strong> ${q.rationale}</div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function checkAnswer(index) {
+        const q = quizData[index];
+        const inputs = document.querySelectorAll(`input[name="q-${index}"]`);
+        
+        let selected = [];
+        inputs.forEach((input, optIdx) => {
+            if (input.checked) selected.push(optIdx);
+        });
+
+        if (selected.length === 0) {
+            alert('Please select an option first.');
+            return;
+        }
+
+        let isCorrect = false;
+        if (q.type === 'checkbox') {
+            const sortedSelected = [...selected].sort();
+            const sortedAnswer = [...q.answer].sort();
+            isCorrect = JSON.stringify(sortedSelected) === JSON.stringify(sortedAnswer);
+        } else {
+            isCorrect = selected[0] === q.answer;
+        }
+
+        inputs.forEach((input, optIdx) => {
+            const label = document.getElementById(`opt-${index}-${optIdx}`);
+            if (q.type === 'checkbox') {
+                if (q.answer.includes(optIdx)) {
+                    label.classList.add('correct');
+                } else if (input.checked) {
+                    label.classList.add('incorrect');
+                }
+            } else {
+                if (optIdx === q.answer) {
+                    label.classList.add('correct');
+                } else if (input.checked) {
+                    label.classList.add('incorrect');
+                }
+            }
+            input.disabled = true;
+        });
+
+        document.getElementById(`rationale-${index}`).classList.add('visible');
+        
+        if (!userAnswers[index]) {
+            userAnswers[index] = true;
+            document.getElementById('answered-count').textContent = Object.keys(userAnswers).length;
+            if (isCorrect) {
+                score++;
+                document.getElementById('score-count').textContent = score;
+            }
+        }
+    }
+
+    window.onload = initQuiz;
+</script>
+
+</body>
+</html>
